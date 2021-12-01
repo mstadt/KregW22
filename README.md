@@ -2,7 +2,7 @@
 
 Code files for K+ regulation model.
 
-### File explanations
+## Key files
 
 **checkIC.m** uses MATLAB function decic to check if the initial condition is consistent
 
