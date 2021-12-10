@@ -18,6 +18,8 @@ Code files for K+ regulation model.
 
 **run_simulation** runs 2 simulations based on given specifications, plots relevant results using **plot_simulation**
 
+**set_params** sets the model parameters
+
 ### Data/
 contains data file from Preston et al. 2015
 data file is generated from makePrestonData.m
