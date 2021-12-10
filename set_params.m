@@ -35,7 +35,7 @@ pars.P_muscle = (NKA_baseline)/(pars.Kmuscle_baseline - pars.Kec_baseline);
 pars.GFR   = 0.125; %GFR L/min
 pars.etapsKreab = 0.92; % fractional ps K reabsorption, fixed constant
 
-pars.Phi_dtKsec_eq = 0.03; %0.05375; % 10% of PhifilK %0.075; %0.07655; %0.084;% (from Layton & Layton epithelial trasport),
+pars.Phi_dtKsec_eq = 0.025; %0.03; %0.05375; % 10% of PhifilK %0.075; %0.07655; %0.084;% (from Layton & Layton epithelial trasport),
 pars.dtKsec_A = 0.3475;
 pars.dtKsec_B = 0.23792;
 
@@ -45,8 +45,8 @@ pars.Phi_cdKsec_eq = 0.01; %0.026875; %0.0075;% % (from Layton & Layton epitheli
 pars.cdKsec_A = 0.161275;
 pars.cdKsec_B = 0.410711;
 
-pars.cdKreab_A = 0.0057; 
-pars.cdKreab_B = 0.0068508; 
+pars.cdKreab_A = 0.00075; %0.0057; 
+pars.cdKreab_B = 0.0054; %0.0068508; 
 
 %% ALD
 pars.ALD_eq = 85; % ng/L
