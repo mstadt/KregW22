@@ -77,12 +77,12 @@ function rmse = fit_KCL_Preston2015(FF_param)
     end % if show_plot
     
     %% residuals
-    serum_res = serum_vals - data.Meal_serum_scaled';
-    UK_res = UK_vals - data.Meal_UK_scaled';
+    serum_res = serum_vals - data.KCL_serum_scaled';
+    UK_res = UK_vals - data.KCL_UK_scaled';
     
     % scale by average data value 
-    serum_res_scaled = serum_res./(mean(data.Meal_serum_scaled));
-    UK_res_scaled = UK_res./(mean(data.Meal_UK_scaled));
+    serum_res_scaled = serum_res./(mean(data.KCL_serum_scaled));
+    UK_res_scaled = UK_res./(mean(data.KCL_UK_scaled));
     
     err = [UK_res_scaled, serum_res_scaled];
     %err = [UK_res]; % ECK fit is quite good, UK seems off, checking
