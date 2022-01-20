@@ -47,7 +47,7 @@ Kin2.Kin_type = 'gut_Kin';%'Preston_SS';
 Kin2.Meal = 0;
 Kin2.KCL = 1;
 
-alt_sim2 =false;
+alt_sim2 = true; %false;
 do_ALD_NKA2 =true;
 do_ALD_sec2 = true;
 
