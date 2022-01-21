@@ -227,11 +227,11 @@ end
 if fit_CDKreab
     %f(26) = Phi_cdKreab - ((cdKreab_A*Phi_dtK)/(cdKreab_B + Phi_dtK));
     temp = (1/(1+exp(cdKreab_A*(Phi_dtK-cdKreab_B))));
-    f(26) = Phi_cdKreab - Phi_dtK*temp;
+    f(26) = Phi_cdKreab - Phi_dtK*temp*eta_cdKreab;
 else
     %f(26) = Phi_cdKreab - ((pars.cdKreab_A*Phi_dtK)/(pars.cdKreab_B + Phi_dtK));
     temp = (1/(1+exp(pars.cdKreab_A*(Phi_dtK-pars.cdKreab_B))));
-    f(26) = Phi_cdKreab - (Phi_dtK*temp);
+    f(26) = Phi_cdKreab - (Phi_dtK*temp*eta_cdKreab);
 end
 
 if MK_crosstalk == 3
