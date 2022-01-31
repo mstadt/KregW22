@@ -1,6 +1,6 @@
 function f = k_reg_mod(t,x,x_p,pars,varargin)
 % K regulation model equations
-
+urine = true; %This is to turn on(true)/off(false) urinary excretion
 %% Retrieve variables by name
 % amount K
 M_Kgut                  = x(1);     M_Kgut_p        = x_p(1);
@@ -119,7 +119,6 @@ end %for
 % Get Phi_Kin and t_insulin
 [Phi_Kin, t_insulin] = get_PhiKin(t, SS, pars, Kin);
 
-
 % set insulin level
 C_insulin = get_Cinsulin(t_insulin);
 
@@ -130,7 +129,8 @@ f = zeros(length(x),1);
 % K amount
 % ECF
 f(1) = M_Kgut_p - ((1-pars.fecal_excretion)*Phi_Kin - pars.kgut*M_Kgut);
-f(2) = M_Kplasma_p - (pars.kgut*M_Kgut - Phi_ECF_diffusion - Phi_uK);
+%f(2) = M_Kplasma_p - (pars.kgut*M_Kgut - Phi_ECF_diffusion - Phi_uK);
+f(2) = M_Kplasma_p - (pars.kgut*M_Kgut - Phi_ECF_diffusion); %turn off urinary
 f(3) = M_KECF_other_p - (Phi_ECF_diffusion - Phi_ECtoIC + Phi_ICtoEC);
 % ICF
 f(4) = M_Kmuscle_p - (Phi_ECtoIC - Phi_ICtoEC);
@@ -169,14 +169,21 @@ else
 end
 
 % kidney
-f(15) = Phi_filK - (pars.GFR*K_plasma);
+if urine
+    f(15) = Phi_filK - (pars.GFR*K_plasma);
+else
+    f(15) = Phi_filK;
+end
 % proximal segments
 f(16) = Phi_psKreab - (pars.etapsKreab * Phi_filK);
 f(17) = Phi_mdK - (Phi_filK - Phi_psKreab);
 
 % distal tubule
-f(18) = Phi_dtKsec - (pars.Phi_dtKsec_eq * eta_dtKsec);
-
+if urine
+    f(18) = Phi_dtKsec - (pars.Phi_dtKsec_eq * eta_dtKsec);
+else
+    f(18) = Phi_dtKsec;
+end
 if MK_crosstalk == 1
     f(19) = eta_dtKsec - (gamma_al * gamma_Kin * omega_Kic);
 else
@@ -205,11 +212,18 @@ else
     f(21) = gamma_Kin - 1;
 end
 
-f(22) = Phi_dtK - (Phi_mdK + Phi_dtKsec);
+if urine 
+    f(22) = Phi_dtK - (Phi_mdK + Phi_dtKsec);
+else 
+    f(22) = Phi_dtK;
+end
 
 % collecting duct
-f(23) = Phi_cdKsec - (pars.Phi_cdKsec_eq * eta_cdKsec);
-
+if urine
+    f(23) = Phi_cdKsec - (pars.Phi_cdKsec_eq * eta_cdKsec);
+else 
+    f(23) = Phi_cdKsec;
+end
 if MK_crosstalk == 2
     f(24) = eta_cdKsec - (lambda_al*omega_Kic);
 else
@@ -240,9 +254,13 @@ else
     f(27) = eta_cdKreab - 1;
 end
 
-% urine
-f(28) = Phi_uK - (Phi_dtK + Phi_cdKsec - Phi_cdKreab);
-
+% urine   
+%f(28) = Phi_uK - (Phi_dtK + Phi_cdKsec - Phi_cdKreab);
+if urine
+    f(28) = Phi_uK - (Phi_dtK + Phi_cdKsec - Phi_cdKreab);
+else
+    f(28)=Phi_uK;   % turn off urinary excretion
+%end
 % Aldosteron
 f(29) = C_al - (N_al * pars.ALD_eq);
 f(30) = N_al_p - (1/pars.T_al*(N_als - N_al));
