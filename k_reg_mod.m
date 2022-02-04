@@ -260,7 +260,7 @@ if urine
     f(28) = Phi_uK - (Phi_dtK + Phi_cdKsec - Phi_cdKreab);
 else
     f(28)=Phi_uK;   % turn off urinary excretion
-%end
+end
 % Aldosteron
 f(29) = C_al - (N_al * pars.ALD_eq);
 f(30) = N_al_p - (1/pars.T_al*(N_als - N_al));
