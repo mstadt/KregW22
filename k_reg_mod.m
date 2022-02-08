@@ -129,8 +129,11 @@ f = zeros(length(x),1);
 % K amount
 % ECF
 f(1) = M_Kgut_p - ((1-pars.fecal_excretion)*Phi_Kin - pars.kgut*M_Kgut);
-%f(2) = M_Kplasma_p - (pars.kgut*M_Kgut - Phi_ECF_diffusion - Phi_uK);
-f(2) = M_Kplasma_p - (pars.kgut*M_Kgut - Phi_ECF_diffusion); %turn off urinary
+if urine
+    f(2) = M_Kplasma_p - (pars.kgut*M_Kgut - Phi_ECF_diffusion - Phi_uK);
+else
+    f(2) = M_Kplasma_p - (pars.kgut*M_Kgut - Phi_ECF_diffusion); %turn off urinary
+end
 f(3) = M_KECF_other_p - (Phi_ECF_diffusion - Phi_ECtoIC + Phi_ICtoEC);
 % ICF
 f(4) = M_Kmuscle_p - (Phi_ECtoIC - Phi_ICtoEC);
