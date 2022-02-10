@@ -53,14 +53,14 @@ function rmse = fit_KCL_Preston2015(FF_param)
     
     %% error from data points
     temp = deval(sol, time_serum);
-    serum_vals = temp(7, :);
+    serum_vals = temp(5, :);
     temp = deval(sol, time_UK);
-    UK_vals = temp(30, :);
+    UK_vals = temp(28, :);
     
     show_plot = 1;
     if show_plot
         figure(16)
-        plot(sol.x, sol.y(7,:), 'color', 'red')
+        plot(sol.x, sol.y(5,:), 'color', 'red')
         hold on
         plot(time_serum, data.KCL_serum_scaled, '^', 'markersize', 15, 'color', 'blue')
         plot(time_serum, serum_vals, '*', 'markersize', 15, 'color', 'red')
@@ -68,7 +68,7 @@ function rmse = fit_KCL_Preston2015(FF_param)
         hold off
         
         figure(17)
-        plot(sol.x, sol.y(30, :), 'color', 'red')
+        plot(sol.x, sol.y(28, :), 'color', 'red')
         hold on
         plot(time_UK, data.KCL_UK_scaled, '^', 'markersize', 15, 'color', 'blue')
         plot(time_UK, UK_vals, '*', 'markersize', 15, 'color', 'red')
