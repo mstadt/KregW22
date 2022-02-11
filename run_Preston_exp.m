@@ -1,6 +1,6 @@
 %% run Meal only simulation
 pars = set_params();
-Kin1.Kin_type = 'gut_Kin';
+Kin1.Kin_type = 'gut_Kin3';
 Kin1.Meal = 1;
 Kin1.KCL = 0;
 
@@ -38,7 +38,7 @@ tspan = t0:0.5:tf;
 disp('Meal simulation finished')
 
 %% run KCL only simulation
-Kin2.Kin_type = 'gut_Kin'; %'step_Kin2';
+Kin2.Kin_type = 'gut_Kin3'; %'step_Kin2';
 Kin2.Meal = 0;
 Kin2.KCL = 1;
 
@@ -75,7 +75,7 @@ tspan = t0:0.5:tf;
 disp('KCL simulation finished')
 
 %% run Meal + KCL experiment
-Kin3.Kin_type = 'gut_Kin'; %'step_Kin2';
+Kin3.Kin_type = 'gut_Kin3'; %'step_Kin2';
 Kin3.Meal = 1;
 Kin3.KCL = 1;
 

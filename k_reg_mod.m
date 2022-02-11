@@ -59,8 +59,10 @@ num_eq = pars.num_eq;
 % default settings, varargin is used to change settings
 SS = false; % compute SS solution
 alt_sim = false; % use alternate equations
+urine = true; %This is to turn on(true)/off(false) urinary excretion
+
 % intake arguments 
-Kin.Kin_type = 'gut_Kin'; % 'step_Kin2';
+Kin.Kin_type = 'gut_Kin3'; %'gut_Kin'; % 'step_Kin2';
 Kin.Meal     = 0;
 Kin.KCL      = 0;
 
@@ -77,6 +79,8 @@ fit_P_ecf = false;
 for i = 1:2:length(varargin)
     if strcmp(varargin{i}, 'SS')
         SS = varargin{i+1};
+    elseif strcmp(varargin{i}, 'urine')
+        urine = varargin{i+1};
     elseif strcmp(varargin{i}, 'Kin_type')
         temp = varargin{i+1};
         Kin.Kin_type = temp{1};
@@ -119,7 +123,6 @@ end %for
 % Get Phi_Kin and t_insulin
 [Phi_Kin, t_insulin] = get_PhiKin(t, SS, pars, Kin);
 
-
 % set insulin level
 C_insulin = get_Cinsulin(t_insulin);
 
@@ -129,8 +132,13 @@ f = zeros(length(x),1);
 
 % K amount
 % ECF
+
 f(1) = M_Kgut_p - ((1-pars.fecal_excretion)*Phi_Kin - pars.kgut*M_Kgut);
-f(2) = M_Kplasma_p - (pars.kgut*M_Kgut - Phi_ECF_diffusion - Phi_uK);
+if urine
+    f(2) = M_Kplasma_p - (pars.kgut*M_Kgut - Phi_ECF_diffusion - Phi_uK);
+else
+    f(2) = M_Kplasma_p - (pars.kgut*M_Kgut - Phi_ECF_diffusion); %turn off urinary
+end
 f(3) = M_KECF_other_p - (Phi_ECF_diffusion - Phi_ECtoIC + Phi_ICtoEC);
 % ICF
 f(4) = M_Kmuscle_p - (Phi_ECtoIC - Phi_ICtoEC);
@@ -169,14 +177,21 @@ else
 end
 
 % kidney
-f(15) = Phi_filK - (pars.GFR*K_plasma);
+if urine
+    f(15) = Phi_filK - (pars.GFR*K_plasma);
+else
+    f(15) = Phi_filK;
+end
 % proximal segments
 f(16) = Phi_psKreab - (pars.etapsKreab * Phi_filK);
 f(17) = Phi_mdK - (Phi_filK - Phi_psKreab);
 
 % distal tubule
-f(18) = Phi_dtKsec - (pars.Phi_dtKsec_eq * eta_dtKsec);
-
+if urine
+    f(18) = Phi_dtKsec - (pars.Phi_dtKsec_eq * eta_dtKsec);
+else
+    f(18) = Phi_dtKsec;
+end
 if MK_crosstalk == 1
     f(19) = eta_dtKsec - (gamma_al * gamma_Kin * omega_Kic);
 else
@@ -194,7 +209,7 @@ if do_FF
 % don't need do_FF because the Phi_Kin should do it for me?
 % I guess could be used if separating the signals
     if alt_sim
-        disp('doing alt sim')
+        %disp('doing alt sim')
         f(21) = gamma_Kin - max(1, getFF(M_Kgut, FF, pars));
     else
         f(21) = gamma_Kin - getFF(M_Kgut, FF, pars);%max(1, (Kin.KCL*Feedforward*(Phi_Kin-pars.Phi_Kin_ss) + 1));
@@ -205,11 +220,18 @@ else
     f(21) = gamma_Kin - 1;
 end
 
-f(22) = Phi_dtK - (Phi_mdK + Phi_dtKsec);
+if urine 
+    f(22) = Phi_dtK - (Phi_mdK + Phi_dtKsec);
+else 
+    f(22) = Phi_dtK;
+end
 
 % collecting duct
-f(23) = Phi_cdKsec - (pars.Phi_cdKsec_eq * eta_cdKsec);
-
+if urine
+    f(23) = Phi_cdKsec - (pars.Phi_cdKsec_eq * eta_cdKsec);
+else 
+    f(23) = Phi_cdKsec;
+end
 if MK_crosstalk == 2
     f(24) = eta_cdKsec - (lambda_al*omega_Kic);
 else
@@ -240,9 +262,13 @@ else
     f(27) = eta_cdKreab - 1;
 end
 
-% urine
-f(28) = Phi_uK - (Phi_dtK + Phi_cdKsec - Phi_cdKreab);
-
+% urine   
+%f(28) = Phi_uK - (Phi_dtK + Phi_cdKsec - Phi_cdKreab);
+if urine
+    f(28) = Phi_uK - (Phi_dtK + Phi_cdKsec - Phi_cdKreab);
+else
+    f(28)=Phi_uK;   % turn off urinary excretion
+end
 % Aldosteron
 f(29) = C_al - (N_al * pars.ALD_eq);
 f(30) = N_al_p - (1/pars.T_al*(N_als - N_al));

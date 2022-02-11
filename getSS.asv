@@ -9,7 +9,6 @@ do_FF = true;
 fit_CDKreab = false; % if false will use pars cdKreab_A, cdKreab_B values
 fit_P_ecf = false;
 alt_sim = false;
-urine = true; %This is to turn on(true)/off(false) urinary excretion
 
 do_ALD_NKA = true;
 do_ALD_sec = true;
@@ -27,8 +26,6 @@ MK_slope = 0.1;
 for i = 1:2:length(varargin)
     if strcmp(varargin{i}, 'SS')
         SS = varargin{i+1};
-    elseif strcmp(varargin{i}, 'urine')
-        urine = varargin{i+1};
     elseif strcmp(varargin{i}, 'Kin_type')
         temp = varargin{i+1};
         Kin.Kin_type = temp{1};
@@ -92,9 +89,9 @@ end
 %options = optimset('Display', 'off', 'MaxFunEvals', 1e8, ...
 %    'MaxIter', 4e5);
 %options = optimset('Display', 'iter-detailed', 'MaxFunEvals', 1e8, ...
-%    'MaxIter', 4e5);    
+%    'MaxIter', 4e5);
 disp('getSS.m 2')  
-options = optimoptions('fsolve','Display', 'iter-detailed');
+%options = optimoptions('fsolve','Display', 'iter-detailed');
 [SSdata, residual,...
     exitflag, output] = fsolve(@(x) k_reg_mod(0, x, x_p0, pars, ...
                                 'SS', true, ...

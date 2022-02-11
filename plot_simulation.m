@@ -79,8 +79,8 @@ if plt_amt
         if strcmp(plot_these{ii}, 'totalECF')
             vals1 = X{1}(:, 2) + X{1}(:, 3);
             vals2 = X{2}(:, 2) + X{2}(:,3);
-        elseif strcmp(plot_these{ii}, 'totalbodyK') % not including gut
-            vals1 = X{1}(:, 2) + X{1}(:,3) + X{1}(:,4) + X{1}(:, 5) + X{1}(:, 6);
+        elseif strcmp(plot_these{ii}, 'totalbodyK') % not including gut %Sophia: Gut is included if the 1st column of X is added
+            vals1 = X{1}(:, 2) + X{1}(:,3) + X{1}(:,4) + X{1}(:, 5) + X{1}(:, 6);% + X{1}(:,1);
             vals2 =  X{2}(:,2) + X{2}(:,3) + X{2}(:,4) + X{2}(:, 5) + X{2}(:,6);
         else
             vals1 = X{1}(:, plot_these{ii});
@@ -93,7 +93,8 @@ if plt_amt
         if ismember(ii, [1,2,3,4])
             ylabel('mEq', 'fontsize', fonts.ylabel)
         else
-            ylabel('mEq/L', 'fontsize', fonts.ylabel)
+            ylabel('mEq', 'fontsize', fonts.ylabel)
+            %ylabel('mEq/L', 'fontsize', fonts.ylabel)
         end
         if strcmp(plot_these{ii}, 'totalECF')
             title('Total ECF K', 'fontsize', fonts.title)
@@ -120,7 +121,8 @@ if plt_con
         hold on
         plot(s, times2, vals2, 'linewidth', 2, 'color', c2, 'linestyle', '-.')
         xlabel('time (mins)', 'fontsize', fonts.xlabel)
-        ylabel('mEq/min', 'fontsize', fonts.ylabel)
+        %ylabel('mEq/min', 'fontsize', fonts.ylabel)
+        ylabel('mEq/L', 'fontsize', fonts.ylabel)
         title(varnames{plot_these{ii}}, 'fontsize', fonts.title)
         xlim([-exp_start,tf])
 %         if plot_these{ii} == 10
@@ -333,5 +335,4 @@ if plt_MealKCL_exp
     legend(labels{1}, labels{2}, 'Preston data (Meal + KCL)')
     hold off
 end
-
 end %plot_simulation

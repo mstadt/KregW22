@@ -8,7 +8,7 @@ function rmse = fit_Meal_Preston2015(insulin_params)
     insulin_B = insulin_params(2)
     
     do_insulin = true;
-    Kin.Kin_type = 'gut_Kin';
+    Kin.Kin_type = 'gut_Kin3';
     Kin.Meal = 1;
     Kin.KCL = 0;
     
@@ -91,7 +91,7 @@ function rmse = fit_Meal_Preston2015(insulin_params)
         rmse = rms(err);
         %fprintf('rmse: %f\n', rmse)
     catch
-        fprintf('WARNING!!: parameter space breaks ODE solver...Setting RMSE to 1')
+        fprintf('WARNING!!: parameter space breaks ODE solver...Setting RMSE to 1 \n')
         rmse = 1;
     end
 end
