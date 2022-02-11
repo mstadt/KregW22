@@ -9,6 +9,7 @@ do_FF = true;
 fit_CDKreab = false; % if false will use pars cdKreab_A, cdKreab_B values
 fit_P_ecf = false;
 alt_sim = false;
+urine = true; %This is to turn on(true)/off(false) urinary excretion
 
 do_ALD_NKA = true;
 do_ALD_sec = true;
@@ -26,6 +27,8 @@ MK_slope = 0.1;
 for i = 1:2:length(varargin)
     if strcmp(varargin{i}, 'SS')
         SS = varargin{i+1};
+    elseif strcmp(varargin{i}, 'urine')
+        urine = varargin{i+1};
     elseif strcmp(varargin{i}, 'Kin_type')
         temp = varargin{i+1};
         Kin.Kin_type = temp{1};

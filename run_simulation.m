@@ -4,9 +4,6 @@ close all
 
 %% simulation 1
 pars1 = set_params();
-pars1.FF=0.689352;
-%pars1.Urine=false;
-
 
 Kin1.Kin_type = 'gut_Kin3'; 
 Kin1.Meal = 0;
@@ -54,8 +51,6 @@ disp('simulation 1 finished')
 %% simulation 2
 disp('get sim 2 SS')
 pars2 = set_params();
-%pars2.FF=0.099205;
-%pars2.Urine = false;
 
 Kin2.Kin_type = 'gut_Kin3';%'gut_Kin';%'Preston_SS';
 Kin2.Meal = 0;
@@ -84,7 +79,10 @@ end
                                 'do_ALD_NKA', do_ALD_NKA2,...
                                 'do_ALD_sec', do_ALD_sec2, ...
                                 'do_FF', [do_FF, pars2.FF], ...
-                                'do_M_K_crosstalk', [MKX_type, MKX_slope]);
+                                'do_M_K_crosstalk', [MKX_type, MKX_slope]);  
+                                % if you want to turn off urinary
+                                % excretion: add 'urine', false   to the
+                                % varargin
 if exitflag2 <= 0
     disp(residual2)
 end
@@ -104,6 +102,7 @@ disp('start simulation 2')
                                 'do_FF', [do_FF, pars2.FF],...
                                 'do_M_K_crosstalk', [MKX_type, MKX_slope]), ...
                 tspan, x0, [], x_p0, [], opts);
+                                
 disp('decic done')
 [T2,X2] = ode15i(@(t,x,x_p) k_reg_mod(t,x,x_p, pars2, ...
                                 'Kin_type', {Kin2.Kin_type, Kin2.Meal, Kin2.KCL}, ...
@@ -114,6 +113,8 @@ disp('decic done')
                                 'do_FF', [do_FF, pars2.FF],...
                                 'do_M_K_crosstalk', [MKX_type, MKX_slope]), ...
                 tspan, x0, x_p0, opts);
+                    % if you want to turn off urinary excretion: add
+                    % 'urine', false to the varargin
 disp('simulation 2 finished')
 
 %% plot simulation

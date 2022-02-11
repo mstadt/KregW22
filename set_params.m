@@ -2,9 +2,6 @@ function pars = set_params()
 % this file sets the current parameter values 
 pars.num_eq           =  33;
 
-%% turn urine on/off
-pars.Urine = true; % true = on, false = off
-
 %% K intake at SS
 pars.Phi_Kin_ss        = 70/1440; %100/1440; %mEq/min, steady state for Phi_Kin (Preston 2015)
 pars.t_insulin_ss      = 270; % ss t_insulin value

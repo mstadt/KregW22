@@ -1,6 +1,6 @@
 function f = k_reg_mod(t,x,x_p,pars,varargin)
 % K regulation model equations
-urine = pars.Urine; %true; %This is to turn on(true)/off(false) urinary excretion
+
 %% Retrieve variables by name
 % amount K
 M_Kgut                  = x(1);     M_Kgut_p        = x_p(1);
@@ -59,6 +59,8 @@ num_eq = pars.num_eq;
 % default settings, varargin is used to change settings
 SS = false; % compute SS solution
 alt_sim = false; % use alternate equations
+urine = true; %This is to turn on(true)/off(false) urinary excretion
+
 % intake arguments 
 Kin.Kin_type = 'gut_Kin3'; %'gut_Kin'; % 'step_Kin2';
 Kin.Meal     = 0;
@@ -77,6 +79,8 @@ fit_P_ecf = false;
 for i = 1:2:length(varargin)
     if strcmp(varargin{i}, 'SS')
         SS = varargin{i+1};
+    elseif strcmp(varargin{i}, 'urine')
+        urine = varargin{i+1};
     elseif strcmp(varargin{i}, 'Kin_type')
         temp = varargin{i+1};
         Kin.Kin_type = temp{1};
