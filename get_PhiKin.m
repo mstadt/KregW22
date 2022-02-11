@@ -50,6 +50,7 @@ function [Phi_Kin, t_insulin] = get_PhiKin(t, SS, pars, Kin)
                     Phi_Kin = Kin.KCL*(m*(t-exp_start) + b);
                     t_insulin = Kin.Meal*(t-exp_start);
                 elseif t>t2
+                %else
                     Phi_Kin = Kin.KCL*0;
                     t_insulin = Kin.Meal*(t-exp_start);
                 end
@@ -58,6 +59,7 @@ function [Phi_Kin, t_insulin] = get_PhiKin(t, SS, pars, Kin)
                 t2 = t1 + 10;
                 t3 = t2 + 10;
                 if t<= t1
+                    disp('In get_PhiKin gut_Kin2 option was chosen')
                     h = 1.5;
                     m = h/10;
                     Phi_Kin = Kin.KCL*(m*(t-exp_start));
@@ -72,6 +74,21 @@ function [Phi_Kin, t_insulin] = get_PhiKin(t, SS, pars, Kin)
                     Phi_Kin = Kin.KCL*(m*(t-exp_start)+b);
                     t_insulin = Kin.Meal*(t-exp_start);
                 elseif t>t3
+                %else   % just switching to 'else' instead of 'elseif' has
+                %fixed some errors before.. not sure why 
+                    Phi_Kin = Kin.KCL*0;
+                    t_insulin = Kin.Meal*(t-exp_start);
+                end
+            elseif strcmp(Kin.Kin_type, 'gut_Kin3')
+                t1 = exp_start + 30;
+                t2 = exp_start + 15;
+                if t<= t1
+                    %disp('Parabola shaped K ingestion')
+                    m = -7/900;
+                    b = 7/4;
+                    Phi_Kin = Kin.KCL*(m*(t-t2)*(t-t2)+b);
+                    t_insulin = Kin.Meal*(t-exp_start);
+                else %if t>t1
                     Phi_Kin = Kin.KCL*0;
                     t_insulin = Kin.Meal*(t-exp_start);
                 end

@@ -1,6 +1,10 @@
 function pars = set_params()
 % this file sets the current parameter values 
 pars.num_eq           =  33;
+
+%% turn urine on/off
+pars.Urine = true; % true = on, false = off
+
 %% K intake at SS
 pars.Phi_Kin_ss        = 70/1440; %100/1440; %mEq/min, steady state for Phi_Kin (Preston 2015)
 pars.t_insulin_ss      = 270; % ss t_insulin value
@@ -19,12 +23,12 @@ pars.V_muscle          = 19.0; %  make sure baseline conc and liver make good ba
 
 %% baseline concentrations
 pars.Kec_baseline      = 4.3;%4.5; % baseline ECF K concentration (total) mEq/L
-pars.P_ECF             = 0.5;%0.8;%0.1; % this parameter will have to be fit I think
+pars.P_ECF             = 0.3;%0.5;%0.8;%0.1; % this parameter will have to be fit I think
 
 pars.Kmuscle_baseline       = 145.0; % baseline muscle concentration mEq/L
 %% NKA activity values
-pars.Vmax              = 134; % mmol/min Cheng 2013
-pars.Km                = 1.0;%1.3; % mmol/L (Cheng 2013 gives between 0.8 and 1.5)
+pars.Vmax              = 130;%134; % mmol/min Cheng 2013
+pars.Km                = 1.4;%1.0;%1.3; % mmol/L (Cheng 2013 gives between 0.8 and 1.5)
 
 %% compute permeability values
 NKA_baseline = pars.Vmax*pars.Kec_baseline/(pars.Km + pars.Kec_baseline);
@@ -52,7 +56,7 @@ pars.cdKreab_B = 0.0054; %0.0068508;
 pars.ALD_eq = 85; % ng/L
 pars.T_al = 60; % ALD half life (min)
 pars.Csod = 144; % sodium concentration mEq/L
-pars.xi_par = 3.0; %lower xi_pars makes C_al less sensitive
+pars.xi_par = 2;%1.1;%3.0; %lower xi_pars makes C_al less sensitive
 
 %% effects
 pars.FF = 0.1;

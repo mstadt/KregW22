@@ -8,7 +8,7 @@ function rmse = fit_Meal_Preston2015(insulin_params)
     insulin_B = insulin_params(2)
     
     do_insulin = true;
-    Kin.Kin_type = 'gut_Kin';
+    Kin.Kin_type = 'gut_Kin3';
     Kin.Meal = 1;
     Kin.KCL = 0;
     
@@ -54,39 +54,44 @@ function rmse = fit_Meal_Preston2015(insulin_params)
     time_UK = data.time_UK + exp_start;
     
     %% error from data points
-    temp = deval(sol, time_serum);
-    serum_vals = temp(7, :);
-    temp = deval(sol, time_UK);
-    UK_vals = temp(30, :);
-    
-    show_plot = 1;
-    if show_plot
-        figure(16)
-        plot(sol.x, sol.y(7,:), 'color', 'red')
-        hold on
-        plot(time_serum, data.Meal_serum_scaled, '^', 'markersize', 15, 'color', 'blue')
-        plot(time_serum, serum_vals, '*', 'markersize', 15, 'color', 'red')
-        title('ECK values')
-        hold off
-        
-        figure(17)
-        plot(sol.x, sol.y(30, :), 'color', 'red')
-        hold on
-        plot(time_UK, data.Meal_UK_scaled, '^', 'markersize', 15, 'color', 'blue')
-        plot(time_UK, UK_vals, '*', 'markersize', 15, 'color', 'red')
-        title('UK values')
-        hold off
-    end % if show_plot
-    
-    %% residuals
-    serum_res = serum_vals - data.Meal_serum_scaled';
-    UK_res = UK_vals - data.Meal_UK_scaled';
-    
-    % scale by average data value 
-    serum_res_scaled = serum_res./(mean(data.Meal_serum_scaled));
-    UK_res_scaled = UK_res./(mean(data.Meal_UK_scaled));
-    
-    err = [UK_res_scaled, serum_res_scaled];
-    %err = [UK_res]; % ECK fit is quite good, UK seems off, checking
-    rmse = rms(err);
+    try
+        temp = deval(sol, time_serum);
+        serum_vals = temp(5, :);
+        temp = deval(sol, time_UK);
+        UK_vals = temp(28, :);
+
+        show_plot = 1;
+        if show_plot
+            figure(16)
+            plot(sol.x, sol.y(5,:), 'color', 'red')
+            hold on
+            plot(time_serum, data.Meal_serum_scaled, '^', 'markersize', 15, 'color', 'blue')
+            plot(time_serum, serum_vals, '*', 'markersize', 15, 'color', 'red')
+            title('ECK values')
+            hold off
+
+            figure(17)
+            plot(sol.x, sol.y(28, :), 'color', 'red')
+            hold on
+            plot(time_UK, data.Meal_UK_scaled, '^', 'markersize', 15, 'color', 'blue')
+            plot(time_UK, UK_vals, '*', 'markersize', 15, 'color', 'red')
+            title('UK values')
+            hold off
+        end % if show_plot
+
+        %% residuals
+        serum_res = serum_vals - data.Meal_serum_scaled';
+        UK_res = UK_vals - data.Meal_UK_scaled';
+
+        % scale by average data value 
+        serum_res_scaled = serum_res./(mean(data.Meal_serum_scaled));
+        UK_res_scaled = UK_res./(mean(data.Meal_UK_scaled));
+
+        err = [UK_res_scaled, serum_res_scaled];
+        rmse = rms(err);
+        %fprintf('rmse: %f\n', rmse)
+    catch
+        fprintf('WARNING!!: parameter space breaks ODE solver...Setting RMSE to 1 \n')
+        rmse = 1;
+    end
 end

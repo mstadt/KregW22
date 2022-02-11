@@ -1,10 +1,14 @@
 % This file runs and then plots two simulations based on given input
 % for each of the simulations
+close all
 
 %% simulation 1
 pars1 = set_params();
+pars1.FF=0.689352;
+%pars1.Urine=false;
 
-Kin1.Kin_type = 'gut_Kin'; 
+
+Kin1.Kin_type = 'gut_Kin3'; 
 Kin1.Meal = 0;
 Kin1.KCL = 1;
 
@@ -14,9 +18,11 @@ do_FF = 1;
 % get SS intial condition
 disp('get sim 1 SS')
 IG_file1 = './IGdata/KregSS.mat';
+disp('1')
 [SSdata1, exitflag1, residual1] = getSS(IG_file1, pars1, Kin1, ...
                                             'do_insulin', [do_ins, pars1.insulin_A, pars1.insulin_B],...
                                            'do_FF', [do_FF, pars1.FF]);
+disp('2')
 if exitflag1 <=0
     disp('residuals')
     disp(residual1)
@@ -32,6 +38,12 @@ tf = 1*1440 + pars1.tchange;%1*1440 + pars1.tchange;
 tspan = t0:0.5:tf;
 
 disp('start simulation 1')
+[x0,x_p0] = decic(@(t,x,x_p) k_reg_mod(t,x,x_p, pars1, ...
+                                'Kin_type', {Kin1.Kin_type, Kin1.Meal, Kin1.KCL}, ...
+                                'do_insulin', [do_ins, pars1.insulin_A, pars1.insulin_B],...
+                                'do_FF', [do_FF, pars1.FF]), ...
+                tspan, x0, [], x_p0, [], opts);
+disp('decic done')
 [T1,X1] = ode15i(@(t,x,x_p) k_reg_mod(t,x,x_p, pars1, ...
                                 'Kin_type', {Kin1.Kin_type, Kin1.Meal, Kin1.KCL}, ...
                                 'do_insulin', [do_ins, pars1.insulin_A, pars1.insulin_B],...
@@ -42,8 +54,10 @@ disp('simulation 1 finished')
 %% simulation 2
 disp('get sim 2 SS')
 pars2 = set_params();
+%pars2.FF=0.099205;
+%pars2.Urine = false;
 
-Kin2.Kin_type = 'gut_Kin';%'Preston_SS';
+Kin2.Kin_type = 'gut_Kin3';%'gut_Kin';%'Preston_SS';
 Kin2.Meal = 0;
 Kin2.KCL = 1;
 
@@ -78,8 +92,19 @@ end
 % run simulation 2
 x0 = SSdata2;
 x_p0 = zeros(size(SSdata2));
+%fprintf('length of x_p0 %d \n', length(x_p0))
 
 disp('start simulation 2')
+[x0,x_p0] = decic(@(t,x,x_p) k_reg_mod(t,x,x_p, pars2, ...
+                                'Kin_type', {Kin2.Kin_type, Kin2.Meal, Kin2.KCL}, ...
+                                'alt_sim', alt_sim2, ...
+                                'do_insulin', [do_ins, pars2.insulin_A, pars2.insulin_B], ...
+                                'do_ALD_NKA', do_ALD_NKA2,...
+                                'do_ALD_sec', do_ALD_sec2, ...
+                                'do_FF', [do_FF, pars2.FF],...
+                                'do_M_K_crosstalk', [MKX_type, MKX_slope]), ...
+                tspan, x0, [], x_p0, [], opts);
+disp('decic done')
 [T2,X2] = ode15i(@(t,x,x_p) k_reg_mod(t,x,x_p, pars2, ...
                                 'Kin_type', {Kin2.Kin_type, Kin2.Meal, Kin2.KCL}, ...
                                 'alt_sim', alt_sim2, ...
@@ -107,4 +132,33 @@ if do_plt
     labels{1} = 'original simulation';
     labels{2} = 'simulation 2';
     plot_simulation(T,X, params, Kin_opts, labels, tf)
+
+    %%plot_dMKgut_dt(T,X,params,labels,tf) %plots dMKgut, dMKmuscle,
+%     %Phi_ECtoIC and PhiICtoEC
+%     for ii = 1:length(T{1})
+%         if T{1}(ii)==0
+%             totK1=X{1}(ii,2) + X{1}(ii,3) + X{1}(ii,4) + X{1}(ii, 5) + X{1}(ii, 6);% + X{1}(ii,1);
+%             gut= X{1}(ii,1);
+%             fprintf('Sim 1: t=0, MKgut=%f \n',gut)
+%             fprintf('Sim 1: t=0, total body K=%f \n',totK1)
+%         end
+%     end
+%     for ii = 1:length(T{2})
+%         if T{2}(ii)==0
+%             totK1_2=X{2}(ii,2) + X{2}(ii,3) + X{2}(ii,4) + X{2}(ii, 5) + X{2}(ii, 6);
+%             fprintf('Sim 2: t=0, total body K=%f \n',totK1_2)
+%         end
+%     end
+%     len1 = length(T{1});
+%     totK2=X{1}(len1,2) + X{1}(len1,3) + X{1}(len1,4) + X{1}(len1, 5) + X{1}(len1, 6);% + X{1}(len1,1);
+%     gut2=X{1}(len1,1);
+%     fprintf('Sim1: t=end, total body K=%f \n',totK2)
+%     fprintf('Sim1: t=end, MKgut=%f \n',gut2)
+% 
+%     len = length(T{1});
+%     totK2_2=X{2}(len,2) + X{2}(len,3) + X{2}(len,4) + X{2}(len, 5) + X{2}(len, 6);
+%     fprintf('Sim2: t=end, total body K=%f \n',totK2_2)
+%     
+%     fprintf('Sim 1: delta total body K=%f \n',totK2-totK1)
+%     fprintf('Sim 2: delta total body K=%f \n',totK2_2-totK1_2)
 end

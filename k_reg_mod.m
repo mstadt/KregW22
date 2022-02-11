@@ -1,6 +1,6 @@
 function f = k_reg_mod(t,x,x_p,pars,varargin)
 % K regulation model equations
-urine = true; %This is to turn on(true)/off(false) urinary excretion
+urine = pars.Urine; %true; %This is to turn on(true)/off(false) urinary excretion
 %% Retrieve variables by name
 % amount K
 M_Kgut                  = x(1);     M_Kgut_p        = x_p(1);
@@ -60,7 +60,7 @@ num_eq = pars.num_eq;
 SS = false; % compute SS solution
 alt_sim = false; % use alternate equations
 % intake arguments 
-Kin.Kin_type = 'gut_Kin'; % 'step_Kin2';
+Kin.Kin_type = 'gut_Kin3'; %'gut_Kin'; % 'step_Kin2';
 Kin.Meal     = 0;
 Kin.KCL      = 0;
 
@@ -128,6 +128,7 @@ f = zeros(length(x),1);
 
 % K amount
 % ECF
+
 f(1) = M_Kgut_p - ((1-pars.fecal_excretion)*Phi_Kin - pars.kgut*M_Kgut);
 if urine
     f(2) = M_Kplasma_p - (pars.kgut*M_Kgut - Phi_ECF_diffusion - Phi_uK);
@@ -204,7 +205,7 @@ if do_FF
 % don't need do_FF because the Phi_Kin should do it for me?
 % I guess could be used if separating the signals
     if alt_sim
-        disp('doing alt sim')
+        %disp('doing alt sim')
         f(21) = gamma_Kin - max(1, getFF(M_Kgut, FF, pars));
     else
         f(21) = gamma_Kin - getFF(M_Kgut, FF, pars);%max(1, (Kin.KCL*Feedforward*(Phi_Kin-pars.Phi_Kin_ss) + 1));

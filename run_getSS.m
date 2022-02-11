@@ -3,13 +3,16 @@
 %% Begin user input
 pars = set_params();
 
+% trying fitted params
+%pars.FF =0.099205  ;
 
-Kin.Kin_type = 'gut_Kin';
+
+Kin.Kin_type = 'gut_Kin3';
 Kin.Meal = 1;
 Kin.KCL  = 1;
 MKX = 0; %MK crosstalk
 
-alt_sim = false; % run an alternative simulation (if set up)
+alt_sim = true; %false; % run an alternative simulation (if set up)
 if alt_sim
     disp('******doing alt_sim**********')
 end

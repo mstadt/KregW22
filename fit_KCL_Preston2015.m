@@ -6,7 +6,7 @@ function rmse = fit_KCL_Preston2015(FF_param)
     
     FF = FF_param;
     
-    Kin.Kin_type = 'gut_Kin';
+    Kin.Kin_type = 'gut_Kin3';%'gut_Kin3';
     Kin.Meal = 0;
     Kin.KCL = 1;
     
@@ -52,39 +52,44 @@ function rmse = fit_KCL_Preston2015(FF_param)
     time_UK = data.time_UK + exp_start;
     
     %% error from data points
-    temp = deval(sol, time_serum);
-    serum_vals = temp(7, :);
-    temp = deval(sol, time_UK);
-    UK_vals = temp(30, :);
+    try
+        temp = deval(sol, time_serum);
+        serum_vals = temp(5, :);
+        temp = deval(sol, time_UK);
+        UK_vals = temp(28, :);
     
-    show_plot = 1;
-    if show_plot
-        figure(16)
-        plot(sol.x, sol.y(7,:), 'color', 'red')
-        hold on
-        plot(time_serum, data.KCL_serum_scaled, '^', 'markersize', 15, 'color', 'blue')
-        plot(time_serum, serum_vals, '*', 'markersize', 15, 'color', 'red')
-        title('Serum K concentration')
-        hold off
+        show_plot = 1;
+        if show_plot
+            figure(16)
+            plot(sol.x, sol.y(5,:), 'color', 'red')
+            hold on
+            plot(time_serum, data.KCL_serum_scaled, '^', 'markersize', 15, 'color', 'blue')
+            plot(time_serum, serum_vals, '*', 'markersize', 15, 'color', 'red')
+            title('Serum K concentration')
+            hold off
         
-        figure(17)
-        plot(sol.x, sol.y(30, :), 'color', 'red')
-        hold on
-        plot(time_UK, data.KCL_UK_scaled, '^', 'markersize', 15, 'color', 'blue')
-        plot(time_UK, UK_vals, '*', 'markersize', 15, 'color', 'red')
-        title('UK values')
-        hold off
-    end % if show_plot
+            figure(17)
+            plot(sol.x, sol.y(28, :), 'color', 'red')
+            hold on
+            plot(time_UK, data.KCL_UK_scaled, '^', 'markersize', 15, 'color', 'blue')
+            plot(time_UK, UK_vals, '*', 'markersize', 15, 'color', 'red')
+            title('UK values')
+            hold off
+        end % if show_plot
     
-    %% residuals
-    serum_res = serum_vals - data.KCL_serum_scaled';
-    UK_res = UK_vals - data.KCL_UK_scaled';
+        %% residuals
+        serum_res = serum_vals - data.KCL_serum_scaled';
+        UK_res = UK_vals - data.KCL_UK_scaled';
     
-    % scale by average data value 
-    serum_res_scaled = serum_res./(mean(data.KCL_serum_scaled));
-    UK_res_scaled = UK_res./(mean(data.KCL_UK_scaled));
+        % scale by average data value 
+        serum_res_scaled = serum_res./(mean(data.KCL_serum_scaled));
+        UK_res_scaled = UK_res./(mean(data.KCL_UK_scaled));
     
-    err = [UK_res_scaled, serum_res_scaled];
-    %err = [UK_res]; % ECK fit is quite good, UK seems off, checking
-    rmse = rms(err);
+        err = [UK_res_scaled, serum_res_scaled];
+        %err = [UK_res]; % ECK fit is quite good, UK seems off, checking
+        rmse = rms(err);
+    catch
+        fprintf('WARNING!!: parameter space breaks ODE solver...Setting RMSE to 1 \n')
+        rmse = 1;
+    end
 end
