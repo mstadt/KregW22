@@ -53,7 +53,7 @@ pars.cdKreab_B = 0.0054; %0.0068508;
 pars.ALD_eq = 85; % ng/L
 pars.T_al = 60; % ALD half life (min)
 pars.Csod = 144; % sodium concentration mEq/L
-pars.xi_par = 2;%1.1;%3.0; %lower xi_pars makes C_al less sensitive
+pars.xi_par = 2.0; %lower xi_pars makes C_al less sensitive
 
 %% effects
 pars.FF = 0.1;
