@@ -1,6 +1,5 @@
 %% run Meal only simulation
 pars = set_params();
-pars.FF=0.689352;
 Kin1.Kin_type = 'gut_Kin3';
 Kin1.Meal = 1;
 Kin1.KCL = 0;
