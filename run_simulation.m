@@ -4,15 +4,7 @@ close all
 
 %% simulation 1
 pars1 = set_params();
-% pars1.Phi_dtKsec_eq= 0.043;%0.045;%%0.025;
-% pars1.Phi_cdKsec_eq= 0.0018;%0.01; 
-% 
-% pars1.FF = 0.250274;   
-% pars1.insulin_A = 1;%0.999045;
-% pars1.insulin_B = 0.6753;
-% pars1.cdKreab_A = 0.295650;
-% pars1.cdKreab_B = 0.472825;
-% pars1.Kec_total = 4.2;
+
 
 Kin1.Kin_type = 'gut_Kin3'; 
 Kin1.Meal = 0;
@@ -63,26 +55,6 @@ disp('simulation 1 finished')
 %% simulation 2
 disp('get sim 2 SS')
 pars2 = set_params();
-% pars2.Phi_dtKsec_eq= 0.035;%0.03;%0.025;  % bigger ~ slightly bigger Urine [K], significantly smaller plasma [K]
-% pars2.Phi_cdKsec_eq= 0.006;%0.01;   % bigger ~ slightly smaller Urine [K], significantly smaller plasma [K]
-                                    % smaller ~ significantly bigger plasma [K], not much effect on urine
-
-% pars2.Phi_dtKsec_eq= 0.041;
-% pars2.Phi_cdKsec_eq= 0.002;
-% pars2.FF = 0.250274;   
-% pars2.insulin_A = 0.999789;
-% pars2.insulin_B =0.676097;
-% pars2.cdKreab_A =  0.294864;
-% pars2.cdKreab_B = 0.473015; 
-% pars2.Kec_total = 4.2;
-
-
-% pars2.cdKsec_A = 0.2; %0.161275;  - plasma
-% pars2.cdKsec_B = 0.5; %0.410711;  - plasma
-% 
-% pars2.dtKsec_A = 0.5;%0.3475;   - plasma; vertical stretch of urinary
-% pars2.dtKsec_B =  0.1; %0.23792; - plasma; vertical stretch of urinary, very small shift in the initial point
-
 
 Kin2.Kin_type = 'gut_Kin3';%'gut_Kin';%'Preston_SS';
 Kin2.Meal = 0;
