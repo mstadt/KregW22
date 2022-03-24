@@ -1,7 +1,6 @@
 function plot_Preston_exp(T, X, params, Kin_opts)
 
-%% line 287 - right now a datapoint is removed. Change temp to data_times and bring back the original Preston_data file to 
-%% bring that datapoint back
+%% if want to remove the outlying datapoin in Meal UP experiment, use Meal_UK_scaled_nodatapoint data. Otherwise - use Meal_UK_scaled
 
 close all
 exp_start = params{1}.tchange + 60 + 6*60;
