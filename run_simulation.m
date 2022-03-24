@@ -4,11 +4,21 @@ close all
 
 %% simulation 1
 pars1 = set_params();
+% pars1.Phi_dtKsec_eq= 0.043;%0.045;%%0.025;
+% pars1.Phi_cdKsec_eq= 0.0018;%0.01; 
+% 
+% pars1.FF = 0.250274;   
+% pars1.insulin_A = 1;%0.999045;
+% pars1.insulin_B = 0.6753;
+% pars1.cdKreab_A = 0.295650;
+% pars1.cdKreab_B = 0.472825;
+% pars1.Kec_total = 4.2;
 
 Kin1.Kin_type = 'gut_Kin3'; 
 Kin1.Meal = 0;
 Kin1.KCL = 1;
 
+alt_sim1 = true; %false;
 do_ins = 0;
 do_FF = 1;
 
@@ -18,7 +28,8 @@ IG_file1 = './IGdata/KregSS.mat';
 disp('1')
 [SSdata1, exitflag1, residual1] = getSS(IG_file1, pars1, Kin1, ...
                                             'do_insulin', [do_ins, pars1.insulin_A, pars1.insulin_B],...
-                                           'do_FF', [do_FF, pars1.FF]);
+                                           'do_FF', [do_FF, pars1.FF],...
+                                           'alt_sim',alt_sim1);
 disp('2')
 if exitflag1 <=0
     disp('residuals')
@@ -35,14 +46,15 @@ tf = 1*1440 + pars1.tchange;%1*1440 + pars1.tchange;
 tspan = t0:0.5:tf;
 
 disp('start simulation 1')
-[x0,x_p0] = decic(@(t,x,x_p) k_reg_mod(t,x,x_p, pars1, ...
-                                'Kin_type', {Kin1.Kin_type, Kin1.Meal, Kin1.KCL}, ...
-                                'do_insulin', [do_ins, pars1.insulin_A, pars1.insulin_B],...
-                                'do_FF', [do_FF, pars1.FF]), ...
-                tspan, x0, [], x_p0, [], opts);
+%[x0,x_p0] = decic(@(t,x,x_p) k_reg_mod(t,x,x_p, pars1, ...
+%                                'Kin_type', {Kin1.Kin_type, Kin1.Meal, Kin1.KCL}, ...
+%                                'do_insulin', [do_ins, pars1.insulin_A, pars1.insulin_B],...
+%                                'do_FF', [do_FF, pars1.FF]), ...
+%                tspan, x0, [], x_p0, [], opts);
 disp('decic done')
 [T1,X1] = ode15i(@(t,x,x_p) k_reg_mod(t,x,x_p, pars1, ...
                                 'Kin_type', {Kin1.Kin_type, Kin1.Meal, Kin1.KCL}, ...
+                                'alt_sim', alt_sim1, ...
                                 'do_insulin', [do_ins, pars1.insulin_A, pars1.insulin_B],...
                                 'do_FF', [do_FF, pars1.FF]), ...
                         tspan, x0, x_p0, opts);
@@ -51,6 +63,26 @@ disp('simulation 1 finished')
 %% simulation 2
 disp('get sim 2 SS')
 pars2 = set_params();
+% pars2.Phi_dtKsec_eq= 0.035;%0.03;%0.025;  % bigger ~ slightly bigger Urine [K], significantly smaller plasma [K]
+% pars2.Phi_cdKsec_eq= 0.006;%0.01;   % bigger ~ slightly smaller Urine [K], significantly smaller plasma [K]
+                                    % smaller ~ significantly bigger plasma [K], not much effect on urine
+
+% pars2.Phi_dtKsec_eq= 0.041;
+% pars2.Phi_cdKsec_eq= 0.002;
+% pars2.FF = 0.250274;   
+% pars2.insulin_A = 0.999789;
+% pars2.insulin_B =0.676097;
+% pars2.cdKreab_A =  0.294864;
+% pars2.cdKreab_B = 0.473015; 
+% pars2.Kec_total = 4.2;
+
+
+% pars2.cdKsec_A = 0.2; %0.161275;  - plasma
+% pars2.cdKsec_B = 0.5; %0.410711;  - plasma
+% 
+% pars2.dtKsec_A = 0.5;%0.3475;   - plasma; vertical stretch of urinary
+% pars2.dtKsec_B =  0.1; %0.23792; - plasma; vertical stretch of urinary, very small shift in the initial point
+
 
 Kin2.Kin_type = 'gut_Kin3';%'gut_Kin';%'Preston_SS';
 Kin2.Meal = 0;
@@ -59,6 +91,7 @@ Kin2.KCL = 1;
 alt_sim2 = true; %false;
 do_ALD_NKA2 =true;
 do_ALD_sec2 = true;
+urine = true;
 
 do_ins = 0;
 do_FF = 1;
@@ -79,10 +112,9 @@ end
                                 'do_ALD_NKA', do_ALD_NKA2,...
                                 'do_ALD_sec', do_ALD_sec2, ...
                                 'do_FF', [do_FF, pars2.FF], ...
-                                'do_M_K_crosstalk', [MKX_type, MKX_slope]);  
-                                % if you want to turn off urinary
-                                % excretion: add 'urine', false   to the
-                                % varargin
+                                'do_M_K_crosstalk', [MKX_type, MKX_slope],...
+                                'urine',urine);  
+
 if exitflag2 <= 0
     disp(residual2)
 end
@@ -93,15 +125,16 @@ x_p0 = zeros(size(SSdata2));
 %fprintf('length of x_p0 %d \n', length(x_p0))
 
 disp('start simulation 2')
-[x0,x_p0] = decic(@(t,x,x_p) k_reg_mod(t,x,x_p, pars2, ...
-                                'Kin_type', {Kin2.Kin_type, Kin2.Meal, Kin2.KCL}, ...
-                                'alt_sim', alt_sim2, ...
-                                'do_insulin', [do_ins, pars2.insulin_A, pars2.insulin_B], ...
-                                'do_ALD_NKA', do_ALD_NKA2,...
-                                'do_ALD_sec', do_ALD_sec2, ...
-                                'do_FF', [do_FF, pars2.FF],...
-                                'do_M_K_crosstalk', [MKX_type, MKX_slope]), ...
-                tspan, x0, [], x_p0, [], opts);
+%[x0,x_p0] = decic(@(t,x,x_p) k_reg_mod(t,x,x_p, pars2, ...
+%                                'Kin_type', {Kin2.Kin_type, Kin2.Meal, Kin2.KCL}, ...
+%                                'alt_sim', alt_sim2, ...
+%                                'do_insulin', [do_ins, pars2.insulin_A, pars2.insulin_B], ...
+%                                'do_ALD_NKA', do_ALD_NKA2,...
+%                                'do_ALD_sec', do_ALD_sec2, ...
+%                                'do_FF', [do_FF, pars2.FF],...
+%                                'do_M_K_crosstalk', [MKX_type, MKX_slope],...
+%                                'urine',urine), ...
+%                tspan, x0, [], x_p0, [], opts);
                                 
 disp('decic done')
 [T2,X2] = ode15i(@(t,x,x_p) k_reg_mod(t,x,x_p, pars2, ...
@@ -111,10 +144,10 @@ disp('decic done')
                                 'do_ALD_NKA', do_ALD_NKA2,...
                                 'do_ALD_sec', do_ALD_sec2, ...
                                 'do_FF', [do_FF, pars2.FF],...
-                                'do_M_K_crosstalk', [MKX_type, MKX_slope]), ...
+                                'do_M_K_crosstalk', [MKX_type, MKX_slope],...
+                                'urine',urine), ...
                 tspan, x0, x_p0, opts);
-                    % if you want to turn off urinary excretion: add
-                    % 'urine', false to the varargin
+
 disp('simulation 2 finished')
 
 %% plot simulation
@@ -134,8 +167,10 @@ if do_plt
     labels{2} = 'simulation 2';
     plot_simulation(T,X, params, Kin_opts, labels, tf)
 
-    %%plot_dMKgut_dt(T,X,params,labels,tf) %plots dMKgut, dMKmuscle,
-%     %Phi_ECtoIC and PhiICtoEC
+    % plot_dMKgut_dt(T,X,params,labels,tf) %plots dMKgut, dMKmuscle, Phi_ECtoIC and PhiICtoEC
+
+    % the following part calculates K and MKgut at the end of the simulation, as well as delta total body K
+
 %     for ii = 1:length(T{1})
 %         if T{1}(ii)==0
 %             totK1=X{1}(ii,2) + X{1}(ii,3) + X{1}(ii,4) + X{1}(ii, 5) + X{1}(ii, 6);% + X{1}(ii,1);

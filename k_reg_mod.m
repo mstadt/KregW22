@@ -1,6 +1,7 @@
 function f = k_reg_mod(t,x,x_p,pars,varargin)
 % K regulation model equations
 
+
 %% Retrieve variables by name
 % amount K
 M_Kgut                  = x(1);     M_Kgut_p        = x_p(1);
@@ -208,12 +209,7 @@ end
 if do_FF 
 % don't need do_FF because the Phi_Kin should do it for me?
 % I guess could be used if separating the signals
-    if alt_sim
-        %disp('doing alt sim')
-        f(21) = gamma_Kin - max(1, getFF(M_Kgut, FF, pars));
-    else
-        f(21) = gamma_Kin - getFF(M_Kgut, FF, pars);%max(1, (Kin.KCL*Feedforward*(Phi_Kin-pars.Phi_Kin_ss) + 1));
-    end
+    f(21) = gamma_Kin - max(1, getFF(M_Kgut, FF, pars));%max(1, (Kin.KCL*Feedforward*(Phi_Kin-pars.Phi_Kin_ss) + 1));
 else
 %     % don't want to set to 1 because being lower is important for getting
 %     % the urinary K excretion low enougth to fit the data
@@ -248,11 +244,11 @@ end
 
 if fit_CDKreab
     %f(26) = Phi_cdKreab - ((cdKreab_A*Phi_dtK)/(cdKreab_B + Phi_dtK));
-    temp = (1/(1+exp(cdKreab_A*(Phi_dtK-cdKreab_B))));
+    temp = (1/(1+exp((Phi_dtK-cdKreab_B/100)*cdKreab_A/1000)));
     f(26) = Phi_cdKreab - Phi_dtK*temp*eta_cdKreab;
 else
     %f(26) = Phi_cdKreab - ((pars.cdKreab_A*Phi_dtK)/(pars.cdKreab_B + Phi_dtK));
-    temp = (1/(1+exp(pars.cdKreab_A*(Phi_dtK-pars.cdKreab_B))));
+    temp = (1/(1+exp((Phi_dtK-pars.cdKreab_B/100)*pars.cdKreab_A/1000)));
     f(26) = Phi_cdKreab - (Phi_dtK*temp*eta_cdKreab);
 end
 
@@ -273,7 +269,8 @@ end
 f(29) = C_al - (N_al * pars.ALD_eq);
 f(30) = N_al_p - (1/pars.T_al*(N_als - N_al));
 f(31) = N_als - (xi_ksod);
-f(32) = xi_ksod - max(0,((K_ECFtotal/pars.Csod)/(pars.Kec_baseline/144/(pars.xi_par+1))-pars.xi_par));
+%f(32) = xi_ksod - max(0,((K_ECFtotal/pars.Csod)/(pars.Kec_baseline/144/(pars.xi_par+1))-pars.xi_par));
+f(32) = xi_ksod - max(0,((K_ECFtotal/pars.Csod)/(pars.Kec_total/144/(pars.xi_par+1))-pars.xi_par));
 
 if MK_crosstalk>0
     f(33) = omega_Kic - max(0,(M_K_crosstalk_slope*(K_muscle-pars.Kmuscle_baseline)+1));

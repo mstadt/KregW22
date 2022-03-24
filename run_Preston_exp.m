@@ -1,5 +1,16 @@
 %% run Meal only simulation
 pars = set_params();
+
+% pars.Phi_dtKsec_eq= 0.041;%0.042;%0.043;%0.0427;%0.043;
+% pars.Phi_cdKsec_eq= 0.0022;%0.0018;%0.002;%0.002;
+% 
+% pars.FF = 0.250274;   
+% pars.insulin_A = 0.999789;
+% pars.insulin_B = 0.676097;
+% pars.cdKreab_A = 0.294864;
+% pars.cdKreab_B = 0.473015;         
+% pars.Kec_total = 4.2;
+
 Kin1.Kin_type = 'gut_Kin3';
 Kin1.Meal = 1;
 Kin1.KCL = 0;
@@ -35,6 +46,7 @@ tspan = t0:0.5:tf;
                                 'do_insulin', [do_ins1, pars.insulin_A, pars.insulin_B],...
                                 'do_FF', [do_FF1, pars.FF]), ...
                         tspan, x0, x_p0, opts);
+
 disp('Meal simulation finished')
 
 %% run KCL only simulation
@@ -72,6 +84,7 @@ tspan = t0:0.5:tf;
                                 'do_insulin', [do_ins2, pars.insulin_A, pars.insulin_B],...
                                 'do_FF', [do_FF2, pars.FF]), ...
                         tspan, x0, x_p0, opts);
+
 disp('KCL simulation finished')
 
 %% run Meal + KCL experiment

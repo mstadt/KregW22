@@ -133,10 +133,10 @@ if plt_con
 %             ylim([115, 125])
 %         elseif ismember(plot_these{ii}, [7,8, 9])
 %             ylim([4, 5.0])
-        end
-        hold off
     end
-    legend(labels{1}, labels{2}, 'fontsize', fonts.legend)
+    hold off
+end
+legend(labels{1}, labels{2}, 'fontsize', fonts.legend)
 
 %% fluxes
 if plt_flux
@@ -181,7 +181,7 @@ end
 %% kidney
 if plt_kidney
     figure(4)
-    plot_these = {16, 17, 18, 19, 23, 24, 27, 'CDKtrans', 29};
+    plot_these = {16, 17, 18, 19, 23, 24, 28, 'CDKtrans', 29};
     for ii = 1:9
         s = subplot(3,3, ii);
         if strcmp(plot_these{ii}, 'CDKtrans')

@@ -1,4 +1,8 @@
 function plot_Preston_exp(T, X, params, Kin_opts)
+
+%% line 287 - right now a datapoint is removed. Change temp to data_times and bring back the original Preston_data file to 
+%% bring that datapoint back
+
 close all
 exp_start = params{1}.tchange + 60 + 6*60;
 times1 = (T{1} - exp_start)/1;
@@ -21,7 +25,7 @@ plt_effects = 1;
 plt_kidney = 1;
 plt_ALD = 1;
 plt_exp = 1;
-plt_uK_sum = 0;
+plt_uK_sum = 1;
 
 % fontsizes
 fonts.title = 15;
@@ -193,7 +197,7 @@ end
 %% kidney
 if plt_kidney
     figure(4)
-    plot_these = {15, 16, 17, 18, 22, 23, 24, 'CDKtrans', 28};
+    plot_these = {15, 16, 17, 18, 22, 23, 26, 'CDKtrans', 28};
     for ii = 1:9
         s = subplot(3,3, ii);
         if strcmp(plot_these{ii}, 'CDKtrans')
@@ -254,11 +258,15 @@ if plt_exp
     data_times = data.time_serum;
     plot(times1, vals1, 'linewidth', 2, 'color' ,c1)
     hold on
+    
     plot(times2, vals2, 'linewidth', 2, 'linestyle', '--', 'color', c2)
     plot(times3, vals3, 'linewidth', 2, 'linestyle', '-.', 'color', c3)
     
+    errorbar(data_times, data.Meal_serum_scaled, data.Meal_serum_err,'.', 'markersize', markersize,'color',c1)
     plot(data_times, data.Meal_serum_scaled, '.', 'markersize', markersize, 'color', c1)
+    errorbar(data_times, data.KCL_serum_scaled, data.KCL_serum_err,'.', 'markersize', markersize,'color',c2)
     plot(data_times, data.KCL_serum_scaled, '.', 'markersize', markersize, 'color', c2)
+    errorbar(data_times, data.MealKCL_serum_scaled, data.MealKCL_serum_err,'.', 'markersize', markersize,'color',c3)
     plot(data_times, data.MealKCL_serum_scaled, '.', 'markersize', markersize, 'color', c3)
     
     xlabel('time (mins)')
@@ -279,8 +287,14 @@ if plt_exp
     plot(times2, vals2, 'linewidth', 2, 'linestyle', '--', 'color', c2)
     plot(times3, vals3, 'linewidth', 2, 'linestyle', '-.', 'color', c3)
     
-    plot(data_times, data.Meal_UK_scaled, '.', 'markersize', markersize, 'color', c1)
+
+%     errorbar(data.time_UK_nodatapoint, data.Meal_UK_scaled_nodatapoint, data.Meal_UK_err_nodatapoint,'.', 'markersize', markersize,'color',c1)
+%     plot(data.time_UK_nodatapoint, data.Meal_UK_scaled_nodatapoint, '.', 'markersize', markersize, 'color', c1)  % - without the datapoint
+    errorbar(data.time_UK, data.Meal_UK_scaled, data.Meal_UK_err,'.', 'markersize', markersize,'color',c1)
+    plot(data_times, data.Meal_UK_scaled, '.', 'markersize', markersize, 'color', c1)  % - with the datapoint
+    errorbar(data_times, data.KCL_UK_scaled, data.KCL_UK_err,'.', 'markersize', markersize,'color',c2)
     plot(data_times, data.KCL_UK_scaled, '.', 'markersize', markersize, 'color', c2)
+    errorbar(data_times, data.MealKCL_UK_scaled, data.MealKCL_UK_err,'.', 'markersize', markersize,'color',c3)
     plot(data_times, data.MealKCL_UK_scaled, '.', 'markersize', markersize, 'color', c3)
     
     xlabel('time (mins)')
@@ -288,6 +302,7 @@ if plt_exp
     title('Urinary K excretion')
     legend(labels{1}, labels{2}, labels{3}, 'fontsize', fonts.legend)
     hold off
+
 end %plt_exp
 
 if plt_uK_sum
@@ -323,12 +338,70 @@ if plt_uK_sum
     hold on
     plot(times, KCL_sum, 'linewidth', 2, 'color', c2, 'linestyle', '--')
     plot(times, MealKCL_sum, 'linewidth', 2, 'color', c3, 'linestyle', '-.')
-    plot(data.time_sumUK, data.Meal_sumUK, '.', 'markersize', markersize, 'color', c1)
-    plot(data.time_sumUK, data.KCL_sumUK, '.', 'markersize', markersize, 'color', c2)
-    plot(data.time_sumUK, data.MealKCL_sumUK, '.', 'markersize', markersize, 'color', c3)
+    errorbar(data.time_sumUK, (data.Meal_UK_cmlt-data.Meal_UK_cmlt(1)), data.Meal_UK_cmlt_err,'.', 'markersize', markersize,'color',c1)
+    errorbar(data.time_sumUK, (data.KCL_UK_cmlt-data.KCL_UK_cmlt(1)), data.KCL_UK_cmlt_err,'.', 'markersize', markersize,'color',c2)
+    errorbar(data.time_sumUK, (data.MealKCL_UK_cmlt-data.MealKCL_UK_cmlt(1)), data.MealKCL_UK_cmlt_err,'.', 'markersize', markersize,'color',c3)
+    plot(data.time_sumUK, (data.Meal_UK_cmlt-data.Meal_UK_cmlt(1)), '.', 'markersize', markersize, 'color', c1)
+    plot(data.time_sumUK, (data.KCL_UK_cmlt-data.KCL_UK_cmlt(1)), '.', 'markersize', markersize, 'color', c2)
+    plot(data.time_sumUK, (data.MealKCL_UK_cmlt-data.MealKCL_UK_cmlt(1)), '.', 'markersize', markersize, 'color', c3)
     xlabel('experiment time (mins)', 'fontsize', fonts.xlabel)
     ylabel('Cumulative excretion of K (mEq)', 'fontsize', fonts.ylabel)
     title('Cumulative urinary K excretion', 'fontsize', fonts.title)
+    legend(labels{1}, labels{2}, labels{3}, 'fontsize', fonts.legend)
+    hold off
+    
+
+
+    %% plotting per hour cumulative
+    data_times = data.time_UK_cmlt;
+    Meal_sum = zeros(size(data_times));
+    KCL_sum = zeros(size(data_times));
+    MealKCL_sum = zeros(size(data_times));
+
+    exp_start_idx1 = find(T{1} == exp_start);
+    Meal_sum(1) = vals1(exp_start_idx1)*60;
+    KCL_sum(1) = vals2(exp_start_idx1)*60;
+    MealKCL_sum(1) = vals3(exp_start_idx1)*60;
+
+    i = 0;
+    for ii = 2:length(Meal_sum)
+        exp_start_idx1 = find(T{1} == exp_start + i);
+        exp_end_idx1 = find(T{1} == exp_start + 60 + i);
+        exp_start_idx2 = find(T{2} == exp_start + i);
+        exp_end_idx2 = find(T{2} == exp_start + 60 + i);
+        exp_start_idx3 = find(T{3} == exp_start + i);
+        exp_end_idx3 = find(T{3} == exp_start + 60 + i);
+        % cumulative urine excretion over the experiment
+        uK_Meal = vals1(exp_start_idx1:exp_end_idx1);
+        uK_KCL = vals2(exp_start_idx2:exp_end_idx2);
+        uK_MealKCL = vals3(exp_start_idx3:exp_end_idx3);
+
+        i = i + 60;
+        Meal_sum(ii) = sum(uK_Meal(1:length(uK_Meal)));
+        KCL_sum(ii) = sum(uK_KCL(1:length(uK_KCL)));
+        MealKCL_sum(ii) = sum(uK_MealKCL(1:length(uK_MealKCL)));
+        disp("Meal_sum")
+        disp(Meal_sum)
+
+    end
+
+    figure(51)
+    plot(data_times, Meal_sum, '^', 'markersize', markersize, 'color', c1)
+    hold on
+    plot(data_times, KCL_sum, '^', 'markersize', markersize, 'color', c2)
+    plot(data_times, MealKCL_sum, '^', 'markersize', markersize, 'color', c3)
+
+%     errorbar(data.time_UK_nodatapoint, (data.Meal_UK_scaled_nodatapoint)*60, data.Meal_UK_err_nodatapoint,'.', 'markersize', markersize,'color',c1)
+%     plot(data.time_UK_nodatapoint, (data.Meal_UK_scaled_nodatapoint)*60, '.', 'markersize', markersize, 'color', c1)  % - without the datapoint
+    errorbar(data.time_UK_cmlt, (data.Meal_UK_scaled)*60, data.Meal_UK_err*60,'.', 'markersize', markersize,'color',c1)
+    plot(data.time_UK_cmlt, (data.Meal_UK_scaled)*60, '.', 'markersize', markersize, 'color', c1)  % - with the datapoint
+    errorbar(data_times, (data.KCL_UK_scaled)*60, data.KCL_UK_err*60,'.', 'markersize', markersize,'color',c2)
+    plot(data_times, (data.KCL_UK_scaled)*60, '.', 'markersize', markersize, 'color', c2)
+    errorbar(data_times, (data.MealKCL_UK_scaled)*60, data.MealKCL_UK_err*60,'.', 'markersize', markersize,'color',c3)
+    plot(data_times, (data.MealKCL_UK_scaled)*60, '.', 'markersize', markersize, 'color', c3)
+    xlabel('experiment time (mins)', 'fontsize', fonts.xlabel)
+    ylabel('Urinary excretion of K (mEq) per hour', 'fontsize', fonts.ylabel)
+    title('Urinary K excretion per hour', 'fontsize', fonts.title)
     legend(labels{1}, labels{2}, labels{3}, 'fontsize', fonts.legend)
     hold off
 end % end plt_uK_sum

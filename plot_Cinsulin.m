@@ -79,7 +79,9 @@ xlabel('C_{insulin}', 'fontsize', fonts.xlabel)
 ylabel('$\rho_{insulin}$', 'interpreter', 'latex', 'fontsize', fonts.ylabel)
 title('$\rho_{insulin}$ vs $C_{insulin}$', 'interpreter', 'latex', 'fontsize', fonts.title)
 legend(labels{3}, 'fontsize', fonts.legend)
-xlim(0, Cinsulin_vals1(length(T{1})))
+% Cinsulin_vals1(1)
+% Cinsulin_vals1(length(T{1}))
+% xlim([Cinsulin_vals1(1), Cinsulin_vals1(length(T{1}))])
 
 
 
