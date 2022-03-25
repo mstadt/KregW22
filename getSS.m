@@ -15,6 +15,8 @@ do_ALD_NKA = true;
 do_ALD_sec = true;
 do_MKX = 0;
 
+
+
 cdKreab_A = pars.cdKreab_A;
 cdKreab_B = pars.cdKreab_B;
 insulin_A = pars.insulin_A;
@@ -92,7 +94,7 @@ end
 %options = optimset('Display', 'off', 'MaxFunEvals', 1e8, ...
 %    'MaxIter', 4e5);
 %options = optimset('Display', 'iter-detailed', 'MaxFunEvals', 1e8, ...
-%    'MaxIter', 4e5);    
+%    'MaxIter', 4e5);
 disp('getSS.m 2')  
 options = optimoptions('fsolve','Display', 'iter-detailed');
 [SSdata, residual,...

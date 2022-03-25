@@ -1,5 +1,6 @@
 %% run Meal only simulation
 pars = set_params();
+
 Kin1.Kin_type = 'gut_Kin3';
 Kin1.Meal = 1;
 Kin1.KCL = 0;
@@ -35,6 +36,7 @@ tspan = t0:0.5:tf;
                                 'do_insulin', [do_ins1, pars.insulin_A, pars.insulin_B],...
                                 'do_FF', [do_FF1, pars.FF]), ...
                         tspan, x0, x_p0, opts);
+
 disp('Meal simulation finished')
 
 %% run KCL only simulation
@@ -72,6 +74,7 @@ tspan = t0:0.5:tf;
                                 'do_insulin', [do_ins2, pars.insulin_A, pars.insulin_B],...
                                 'do_FF', [do_FF2, pars.FF]), ...
                         tspan, x0, x_p0, opts);
+
 disp('KCL simulation finished')
 
 %% run Meal + KCL experiment
