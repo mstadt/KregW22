@@ -76,12 +76,23 @@ do_ALD_NKA = true;
 do_ALD_sec = true;
 fit_CDKreab = false; % if false will use pars cdKreab_A, cdKreab_B values
 fit_P_ecf = false;
-
+MealInfo.t_breakfast = 7; % default breakfast is at 7 am
+MealInfo.t_lunch = 13; % default lunch is at 1 pm
+MealInfo.t_dinner = 19; % default dinner is at 7 pm
+MealInfo.K_amount = 35; % default K ingestions is 35mEq per meal
+MealInfo.meal_type = 'other';
 for i = 1:2:length(varargin)
     if strcmp(varargin{i}, 'SS')
         SS = varargin{i+1};
     elseif strcmp(varargin{i}, 'urine')
         urine = varargin{i+1};
+    elseif strcmp(varargin{i}, 'MealInfo')
+        temp = varargin{i+1};
+        MealInfo.t_breakfast = temp{1};
+        MealInfo.t_lunch = temp{2};
+        MealInfo.t_dinner = temp{3};
+        MealInfo.K_amount = temp{4};
+        MealInfo.meal_type = temp{5};
     elseif strcmp(varargin{i}, 'Kin_type')
         temp = varargin{i+1};
         Kin.Kin_type = temp{1};
@@ -122,10 +133,10 @@ for i = 1:2:length(varargin)
 end %for
 
 % Get Phi_Kin and t_insulin
-[Phi_Kin, t_insulin] = get_PhiKin(t, SS, pars, Kin);
+[Phi_Kin, t_insulin] = get_PhiKin(t, SS, pars, Kin, MealInfo);
 
 % set insulin level
-C_insulin = get_Cinsulin(t_insulin);
+C_insulin = get_Cinsulin(t_insulin, MealInfo, Kin);
 
 %% Differential algebraic equation system f(t,x,xp) = 0
 

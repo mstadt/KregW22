@@ -1,7 +1,14 @@
 function plot_Cinsulin()
+% plots C insulin over one day of experiment. (in the simulation, get_Cinsulin works properly 
+% over longer periods of time, more than one day. This plot_Cinsulin function was created to 
+% test whether get_Cinsulin works properly over the period of just one day)
+
 close all
 t_start = 0;
-t_end = 500;
+t_end = 1440;
+MealInfo.t_breakfast = 7;
+MealInfo.t_lunch = 13;
+MealInfo.t_dinner = 19;
 
 % fontsizes
 fonts.title = 15;
@@ -16,7 +23,7 @@ labels{3} = '\rho inslulin vs C insulin';
 
 pars1 = set_params();
 params{1}=pars1;
-Kin1.Kin_type = 'gut_Kin'; 
+Kin1.Kin_type = 'long_simulation'; 
 Kin1.Meal = 0;
 Kin1.KCL = 1;
 Kin2.Kin_type = 'gut_Kin';%'Preston_SS';
@@ -37,8 +44,9 @@ opts = odeset('MaxStep', 20);
 
 x0 = SSdata1;
 x_p0 = zeros(size(SSdata1));
+days = 5;
 t0 = 0;
-tf = 1*1440 + pars1.tchange;%1*1440 + pars1.tchange;
+tf = days*1440 + pars1.tchange;%1*1440 + pars1.tchange;
 tspan = t0:0.5:tf;
 
 [T1,X1] = ode15i(@(t,x,x_p) k_reg_mod(t,x,x_p, pars1, ...
@@ -52,8 +60,9 @@ times1 = (T{1}-t_start)/1;
 
 Cinsulin_vals1 = zeros(size(T{1}));
 phoins_vals1=zeros(size(T{1}));
+
 for ii = 1:length(T{1})
-    [Cinsulin_vals1(ii)] = get_Cinsulin(T{1}(ii));
+    [Cinsulin_vals1(ii)] = get_Cinsulin(T{1}(ii), MealInfo, Kin1);
     [phoins_vals1(ii)] = get_rhoins(Cinsulin_vals1(ii),pars1.insulin_A,pars1.insulin_B);
 end % for ii
 

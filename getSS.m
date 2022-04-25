@@ -25,6 +25,11 @@ FF_A = pars.FF;
 P_ECF = pars.P_ECF;
 M_K_crosstalk = 0;
 MK_slope = 0.1;
+MealInfo.t_breakfast = 7; % default breakfast is at 7 am
+MealInfo.t_lunch = 13; % default lunch is at 1 pm
+MealInfo.t_dinner = 19; % default dinner is at 7 pm
+MealInfo.K_amount = 35; % default K ingested per meal
+MealInfo.meal_type = 'other';
 
 for i = 1:2:length(varargin)
     if strcmp(varargin{i}, 'SS')
@@ -36,6 +41,13 @@ for i = 1:2:length(varargin)
         Kin.Kin_type = temp{1};
         Kin.Meal     = temp{2};
         Kin.KCL      = temp{3};
+    elseif strcmp(varargin{i}, 'MealInfo')
+        temp = varargin{i+1};
+        MealInfo.t_breakfast = temp{1};
+        MealInfo.t_lunch = temp{2};
+        MealInfo.t_dinner = temp{3};
+        MealInfo.K_amount = temp{4};
+        MealInfo.meal_type = temp{5};
     elseif strcmp(varargin{i}, 'alt_sim')
         alt_sim = varargin{i+1};
     elseif strcmp(varargin{i}, 'do_insulin')
@@ -108,7 +120,9 @@ options = optimoptions('fsolve','Display', 'iter-detailed');
                                 'do_ALD_NKA', do_ALD_NKA,...
                                 'do_ALD_sec', do_ALD_sec,...
                                 'do_M_K_crosstalk', [M_K_crosstalk, MK_slope], ...
-                                'alt_sim', alt_sim), ...
+                                'alt_sim', alt_sim,...
+                                'MealInfo', {MealInfo.t_breakfast, MealInfo.t_lunch, MealInfo.t_dinner, ...
+                                             MealInfo.K_amount, MealInfo.meal_type}), ...
                         x0, options);
 disp('getSS.m 3')                 
 %% check for solver convergence

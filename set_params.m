@@ -60,7 +60,7 @@ pars.xi_par = 2;%1.1;%3.0; %lower xi_pars makes C_al less sensitive
 pars.FF = 0.250274; %0.1;
 
 pars.insulin_A = 0.999789;%0.804705; %0.378648; %0.174167; 
-pars.insulin_B = 0.676097;%0.729958; %0.872936; %0.945720; 
+pars.insulin_B =  0.6645;% 0.676097;%0.729958; %0.872936; %0.945720; 
 %% variable names
 pars.varnames = {'M_{Kgut}','M_{Kplasma}', 'M_{Kinterstial}', 'M_{Kmuscle}', ...
                     'K_{plasma}', 'K_{inter}', 'K_{ECF-total}', 'K_{muscle}', ...

@@ -1,5 +1,4 @@
-function plot_Preston_exp(T, X, params, Kin_opts)
-
+function plot_Preston_exp(T, X, params, Kin_opts, MealInfo)
 %% if want to remove the outlying datapoin in Meal UP experiment, use Meal_UK_scaled_nodatapoint data. Otherwise - use Meal_UK_scaled
 
 close all
@@ -24,7 +23,7 @@ plt_effects = 1;
 plt_kidney = 1;
 plt_ALD = 1;
 plt_exp = 1;
-plt_uK_sum = 1;
+plt_uK_sum = 0;
 
 % fontsizes
 fonts.title = 15;
@@ -34,21 +33,21 @@ fonts.legend = 15;
 
 markersize = 15;
 
-labels = {'Meal (insulin only)', 'KCL (FF only)', 'Meal + KCL (insulin + KCL)'};
+labels = {'K deficient Meal', '35 mmol K ingested orally', 'K deficient Meal + 35 mmol K'};
 
 %% plot Phi_Kin
 if plt_PhiKin
     PhiKin_vals1 = zeros(size(T{1}));
     for ii = 1:length(T{1})
-        [PhiKin_vals1(ii), ~] = get_PhiKin(T{1}(ii), 0, params{1}, Kin_opts{1});
+        [PhiKin_vals1(ii), ~] = get_PhiKin(T{1}(ii), 0, params{1}, Kin_opts{1}, MealInfo{1});
     end % for ii
     PhiKin_vals2 = zeros(size(T{2}));
     for ii = 1:length(T{2})
-        [PhiKin_vals2(ii), ~] = get_PhiKin(T{2}(ii), 0, params{2}, Kin_opts{2});
+        [PhiKin_vals2(ii), ~] = get_PhiKin(T{2}(ii), 0, params{2}, Kin_opts{2}, MealInfo{2});
     end %for ii
     PhiKin_vals3 = zeros(size(T{3}));
     for ii = 1:length(T{3})
-        [PhiKin_vals3(ii), ~] = get_PhiKin(T{3}(ii), 0, params{3}, Kin_opts{3});
+        [PhiKin_vals3(ii), ~] = get_PhiKin(T{3}(ii), 0, params{3}, Kin_opts{3}, MealInfo{3});
     end %for ii
     figure(99)
     plot(times1, PhiKin_vals1, 'linewidth', 2, 'color', c1)
@@ -271,7 +270,8 @@ if plt_exp
     xlabel('time (mins)')
     ylabel('mEq/L')
     ylim([3.5, 5.0])
-    title('Plasma concentration')
+    xlim([-420,1020])
+    title('Plasma K concentration')
     legend(labels{1}, labels{2}, labels{3}, 'fontsize', fonts.legend)
     hold off
     
@@ -285,8 +285,7 @@ if plt_exp
     hold on
     plot(times2, vals2, 'linewidth', 2, 'linestyle', '--', 'color', c2)
     plot(times3, vals3, 'linewidth', 2, 'linestyle', '-.', 'color', c3)
-    
-
+   
 %     errorbar(data.time_UK_nodatapoint, data.Meal_UK_scaled_nodatapoint, data.Meal_UK_err_nodatapoint,'.', 'markersize', markersize,'color',c1)
 %     plot(data.time_UK_nodatapoint, data.Meal_UK_scaled_nodatapoint, '.', 'markersize', markersize, 'color', c1)  % - without the datapoint
     errorbar(data.time_UK, data.Meal_UK_scaled, data.Meal_UK_err,'.', 'markersize', markersize,'color',c1)
@@ -298,6 +297,7 @@ if plt_exp
     
     xlabel('time (mins)')
     ylabel('mEq/min')
+    xlim([-420,1020])
     title('Urinary K excretion')
     legend(labels{1}, labels{2}, labels{3}, 'fontsize', fonts.legend)
     hold off
