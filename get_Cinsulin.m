@@ -1,5 +1,20 @@
-function C_insulin = get_Cinsulin(t_insulin)
+function C_insulin = get_Cinsulin(t_insulin, MealInfo, Kin)
     % C_insulin units are nanomole/L
+
+if strcmp(Kin.Kin_type,'long_simulation')
+    t_breakfast = MealInfo.t_breakfast * 60;  % *60 converts the time from hours to minutes
+    t_lunch = MealInfo.t_lunch * 60;
+    t_dinner = MealInfo.t_dinner * 60;
+
+    if t_insulin > t_dinner
+        t_insulin = t_insulin - t_dinner;
+    elseif t_insulin > t_lunch
+        t_insulin = t_insulin - t_lunch;
+    else
+        t_insulin = t_insulin - t_breakfast;
+    end
+end
+
     if (t_insulin <= 0)
         %    disp('between meal')
         C_insulin = 22.6/1000;

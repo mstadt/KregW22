@@ -1,4 +1,4 @@
-function plot_simulation(T,X,params, Kin_opts, labels, tf)
+function plot_simulation(T,X,params, Kin_opts, labels, tf, MealInfo)
 close all
 exp_start = params{1}.tchange + 60 + 6*60;
 tf = tf - exp_start;
@@ -22,8 +22,8 @@ plt_effects = 1;
 plt_kidney = 1;
 plt_ALD = 1;
 plt_MEAL_exp = 0;
-plt_KCL_exp = 1;
-plt_MealKCL_exp = 0;
+plt_KCL_exp = 0;
+plt_MealKCL_exp = 1;
 
 % fontsizes
 fonts.title = 15;
@@ -37,11 +37,11 @@ marker_size = 15;
 if plt_PhiKin
     PhiKin_vals1 = zeros(size(T{1}));
     for ii = 1:length(T{1})
-        [PhiKin_vals1(ii), ~] = get_PhiKin(T{1}(ii), 0, params{1}, Kin_opts{1});
+        [PhiKin_vals1(ii), ~] = get_PhiKin(T{1}(ii), 0, params{1}, Kin_opts{1}, MealInfo{1});
     end % for ii
     PhiKin_vals2 = zeros(size(T{2}));
     for ii = 1:length(T{2})
-        [PhiKin_vals2(ii), ~] = get_PhiKin(T{2}(ii), 0, params{2}, Kin_opts{2});
+        [PhiKin_vals2(ii), ~] = get_PhiKin(T{2}(ii), 0, params{2}, Kin_opts{2}, MealInfo{2});
     end %for ii
     figure(99)
     plot(times1, PhiKin_vals1, 'linewidth', 2, 'color', c1)
@@ -277,7 +277,7 @@ if plt_KCL_exp
     plot(data_times, data_vals, '.', 'markersize', marker_size, 'color', 'k')
     xlabel('time (mins)')
     ylabel('mEq/L')
-    xlim([-10, 400])
+    %xlim([-10, 400])
     title('Plasma concentration for KCL experiment')
     legend(labels{1}, labels{2}, 'Preston data (KCL only)')
     hold off
@@ -294,7 +294,7 @@ if plt_KCL_exp
     plot(data_times, data_vals, '.', 'markersize', marker_size, 'color', 'k')
     xlabel('time (mins)')
     ylabel('mEq/min')
-    xlim([-10, 400])
+    %xlim([-10, 400])
     title('Urine K excretion for KCL experiment')
     legend(labels{1}, labels{2}, 'Preston data (KCL only)')
     hold off  

@@ -6,8 +6,8 @@ function f = k_reg_mod(t,x,x_p,pars,varargin)
 % amount K
 M_Kgut                  = x(1);     M_Kgut_p        = x_p(1);
 M_Kplasma               = x(2);     M_Kplasma_p     = x_p(2);
-M_Kinterstial           = x(3);     M_KECF_other_p  = x_p(3);   
-M_Kmuscle               = x(4);     M_Kmuscle_p     = x_p(4);
+M_Kinterstial           = x(3);     M_KECF_other_p  = x_p(3);   %M_KECF_other_p is dM_Kinter/dt in the manuscript
+M_Kmuscle               = x(4);     M_Kmuscle_p     = x_p(4);   %M_Kmuscle_p is dM_KIC/dt in the manuscript
 
 % K concentration
 K_plasma                = x(5);     
@@ -16,7 +16,7 @@ K_ECFtotal              = x(7);
 K_muscle                = x(8);
 
 % K fluxes
-Phi_ECF_diffusion       = x(9);
+Phi_ECF_diffusion       = x(9);   % Phi_ECF in the manuscript
 
 eta_NKA                 = x(10);
 rho_insulin             = x(11);
@@ -76,12 +76,23 @@ do_ALD_NKA = true;
 do_ALD_sec = true;
 fit_CDKreab = false; % if false will use pars cdKreab_A, cdKreab_B values
 fit_P_ecf = false;
-
+MealInfo.t_breakfast = 7; % default breakfast is at 7 am
+MealInfo.t_lunch = 13; % default lunch is at 1 pm
+MealInfo.t_dinner = 19; % default dinner is at 7 pm
+MealInfo.K_amount = 35; % default K ingestions is 35mEq per meal
+MealInfo.meal_type = 'other';
 for i = 1:2:length(varargin)
     if strcmp(varargin{i}, 'SS')
         SS = varargin{i+1};
     elseif strcmp(varargin{i}, 'urine')
         urine = varargin{i+1};
+    elseif strcmp(varargin{i}, 'MealInfo')
+        temp = varargin{i+1};
+        MealInfo.t_breakfast = temp{1};
+        MealInfo.t_lunch = temp{2};
+        MealInfo.t_dinner = temp{3};
+        MealInfo.K_amount = temp{4};
+        MealInfo.meal_type = temp{5};
     elseif strcmp(varargin{i}, 'Kin_type')
         temp = varargin{i+1};
         Kin.Kin_type = temp{1};
@@ -122,10 +133,10 @@ for i = 1:2:length(varargin)
 end %for
 
 % Get Phi_Kin and t_insulin
-[Phi_Kin, t_insulin] = get_PhiKin(t, SS, pars, Kin);
+[Phi_Kin, t_insulin] = get_PhiKin(t, SS, pars, Kin, MealInfo);
 
 % set insulin level
-C_insulin = get_Cinsulin(t_insulin);
+C_insulin = get_Cinsulin(t_insulin, MealInfo, Kin);
 
 %% Differential algebraic equation system f(t,x,xp) = 0
 
@@ -242,7 +253,9 @@ else
 end
 
 
-if fit_CDKreab
+if fit_CDKreab   % parameters A and B are divided by 1000 and 100 respectively 
+                 % because otherwise, when fitting the parameters, the
+                 % steps would be too small. 
     %f(26) = Phi_cdKreab - ((cdKreab_A*Phi_dtK)/(cdKreab_B + Phi_dtK));
     temp = (1/(1+exp((Phi_dtK-cdKreab_B/100)*cdKreab_A/1000)));
     f(26) = Phi_cdKreab - Phi_dtK*temp*eta_cdKreab;

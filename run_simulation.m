@@ -5,13 +5,12 @@ close all
 %% simulation 1
 pars1 = set_params();
 
-
 Kin1.Kin_type = 'gut_Kin3'; 
-Kin1.Meal = 0;
+Kin1.Meal = 1;
 Kin1.KCL = 1;
 
 alt_sim1 = true; %false;
-do_ins = 0;
+do_ins = 1;
 do_FF = 1;
 
 % get SS intial condition
@@ -55,9 +54,18 @@ disp('simulation 1 finished')
 %% simulation 2
 disp('get sim 2 SS')
 pars2 = set_params();
+% pars2.Phi_dtKsec_eq= 0.035;%0.03;%0.025;  % bigger value ~ slightly bigger Urine [K], significantly smaller plasma [K]
+% pars2.Phi_cdKsec_eq= 0.006;%0.01;   % bigger value ~ slightly smaller Urine [K], significantly smaller plasma [K]
+                                    % smaller ~ significantly bigger plasma
+                                    % [K], not much effect on urine
+% pars2.cdKsec_A = 0.2;   - effect on plasma
+% pars2.cdKsec_B = 0.5;   - effect on plasma
+% pars2.dtKsec_A = 0.5;   - effect on plasma; vertical stretch of urinary
+% pars2.dtKsec_B =  0.1;  - effect on plasma; vertical stretch of urinary, very small shift in the initial point
+
 
 Kin2.Kin_type = 'gut_Kin3';%'gut_Kin';%'Preston_SS';
-Kin2.Meal = 0;
+Kin2.Meal = 1;
 Kin2.KCL = 1;
 
 alt_sim2 = true; %false;
@@ -65,7 +73,7 @@ do_ALD_NKA2 =true;
 do_ALD_sec2 = true;
 urine = true;
 
-do_ins = 0;
+do_ins = 1;
 do_FF = 1;
 
 MKX_type = 0; %0 if not doing MK cross talk, 1:dtKsec, 2:cdKsec,  3:cdKreab
@@ -137,10 +145,8 @@ if do_plt
     X{2} = X2;
     labels{1} = 'original simulation';
     labels{2} = 'simulation 2';
-    plot_simulation(T,X, params, Kin_opts, labels, tf)
-
+    plot_simulation(T,X, params, Kin_opts, labels, tf, MealInfo)
     % plot_dMKgut_dt(T,X,params,labels,tf) %plots dMKgut, dMKmuscle, Phi_ECtoIC and PhiICtoEC
-
     % the following part calculates K and MKgut at the end of the simulation, as well as delta total body K
 
 %     for ii = 1:length(T{1})

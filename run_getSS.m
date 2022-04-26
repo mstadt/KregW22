@@ -3,10 +3,6 @@
 %% Begin user input
 pars = set_params();
 
-% trying fitted params
-%pars.FF =0.099205  ;
-
-
 Kin.Kin_type = 'gut_Kin3';
 Kin.Meal = 1;
 Kin.KCL  = 0;

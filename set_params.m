@@ -47,6 +47,9 @@ pars.Phi_cdKsec_eq = 0.0022;%0.01; %0.026875; %0.0075;% % (from Layton & Layton 
 pars.cdKsec_A = 0.161275;
 pars.cdKsec_B = 0.410711;
 
+
+%% parameters A and B are divided by 1000 and 100 respectively in k_reg_mod
+% because otherwise, when fitting the parameters, the steps would be too small. 
 pars.cdKreab_A = 0.294864;%0.000294864*1000; 0.00075*1000; %0.0057; 
 pars.cdKreab_B = 0.473015;%0.473015*100; 0.0054*100; %0.0068508; 
 
@@ -60,7 +63,7 @@ pars.xi_par = 2;%1.1;%3.0; %lower xi_pars makes C_al less sensitive
 pars.FF = 0.250274; %0.1;
 
 pars.insulin_A = 0.999789;%0.804705; %0.378648; %0.174167; 
-pars.insulin_B = 0.676097;%0.729958; %0.872936; %0.945720; 
+pars.insulin_B =  0.6645;% 0.676097;%0.729958; %0.872936; %0.945720; 
 %% variable names
 pars.varnames = {'M_{Kgut}','M_{Kplasma}', 'M_{Kinterstial}', 'M_{Kmuscle}', ...
                     'K_{plasma}', 'K_{inter}', 'K_{ECF-total}', 'K_{muscle}', ...
