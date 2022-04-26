@@ -6,8 +6,8 @@ function f = k_reg_mod(t,x,x_p,pars,varargin)
 % amount K
 M_Kgut                  = x(1);     M_Kgut_p        = x_p(1);
 M_Kplasma               = x(2);     M_Kplasma_p     = x_p(2);
-M_Kinterstial           = x(3);     M_KECF_other_p  = x_p(3);   
-M_Kmuscle               = x(4);     M_Kmuscle_p     = x_p(4);
+M_Kinterstial           = x(3);     M_KECF_other_p  = x_p(3);   %M_KECF_other_p is dM_Kinter/dt in the manuscript
+M_Kmuscle               = x(4);     M_Kmuscle_p     = x_p(4);   %M_Kmuscle_p is dM_KIC/dt in the manuscript
 
 % K concentration
 K_plasma                = x(5);     
@@ -16,7 +16,7 @@ K_ECFtotal              = x(7);
 K_muscle                = x(8);
 
 % K fluxes
-Phi_ECF_diffusion       = x(9);
+Phi_ECF_diffusion       = x(9);   % Phi_ECF in the manuscript
 
 eta_NKA                 = x(10);
 rho_insulin             = x(11);
@@ -253,7 +253,9 @@ else
 end
 
 
-if fit_CDKreab
+if fit_CDKreab   % parameters A and B are divided by 1000 and 100 respectively 
+                 % because otherwise, when fitting the parameters, the
+                 % steps would be too small. 
     %f(26) = Phi_cdKreab - ((cdKreab_A*Phi_dtK)/(cdKreab_B + Phi_dtK));
     temp = (1/(1+exp((Phi_dtK-cdKreab_B/100)*cdKreab_A/1000)));
     f(26) = Phi_cdKreab - Phi_dtK*temp*eta_cdKreab;

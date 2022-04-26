@@ -47,6 +47,9 @@ pars.Phi_cdKsec_eq = 0.0022;%0.01; %0.026875; %0.0075;% % (from Layton & Layton 
 pars.cdKsec_A = 0.161275;
 pars.cdKsec_B = 0.410711;
 
+
+%% parameters A and B are divided by 1000 and 100 respectively in k_reg_mod
+% because otherwise, when fitting the parameters, the steps would be too small. 
 pars.cdKreab_A = 0.294864;%0.000294864*1000; 0.00075*1000; %0.0057; 
 pars.cdKreab_B = 0.473015;%0.473015*100; 0.0054*100; %0.0068508; 
 
