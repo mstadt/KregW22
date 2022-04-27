@@ -1,6 +1,8 @@
 % This file runs and then plots two simulations based on given input
 % for each of the simulations
 close all
+MealInfo1 = 0;
+MealInfo2 = 0;
 
 %% simulation 1
 pars1 = set_params();
@@ -139,6 +141,8 @@ if do_plt
     Kin_opts{2} = Kin2;
     params{1} = pars1;
     params{2} = pars2;
+    MealInfo{1} = MealInfo1;
+    MealInfo{2} = MealInfo2;
     T{1} = T1;
     T{2} = T2;
     X{1} = X1;
