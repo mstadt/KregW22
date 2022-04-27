@@ -1,20 +1,10 @@
-function plot_dMKgut_dt(T,X,params,labels,tf)
+function plot_dMKgut_dt(T,X,params,labels,tf,Kin_opts,MealInfo)
     exp_start = params{1}.tchange + 60 + 6*60;
     tf = tf - exp_start;
     times1 = (T{1}-exp_start)/1;
     times2 = (T{2}-exp_start)/1;
-    Kin.Kin_type = 'gut_Kin'; % 'step_Kin2';
-    Kin.Meal     = 0;
-    Kin.KCL      = 0;
     SS = false; % compute SS solution
-    Kin1.Kin_type = 'gut_Kin'; 
-    Kin1.Meal = 0;
-    Kin1.KCL = 1;
-    Kin2.Kin_type = 'gut_Kin';%'Preston_SS';
-    Kin2.Meal = 0;
-    Kin2.KCL = 1;
-    Kin_opts{1} = Kin1;
-    Kin_opts{2} = Kin2;
+
 
     % color options
     c1= [0.9290, 0.6940, 0.1250];%yellow
@@ -44,14 +34,14 @@ function plot_dMKgut_dt(T,X,params,labels,tf)
         Phi_ICtoEC(ii)=X{1}(ii,14);
         dMKmuscle_dt_vals1(ii)=X{1}(ii,4);
         dMKgut_dt_vals1(ii)=X{1}(ii,1);
-        [Phi_Kin1, ~]=get_PhiKin(T{1}(ii), SS, params{1}, Kin1);
+        [Phi_Kin1, ~]=get_PhiKin(T{1}(ii), SS, params{1}, Kin_opts{1}, MealInfo{1});
         [dMKgut_dt1(ii),dMKmuscle_dt1(ii),~]=get_dMKgut_dt(Phi_Kin1, params{1}.kgut, X{1}(ii,1),X{1}(ii,13),X{1}(ii,14),T{1}(ii));   %X(.,1) = MKgut
         %fprintf('Phi_Kin at time %f: %f \n',T{1}(ii),Phi_Kin1);
     end
     for ii = 1:length(T{2})
         dMKmuscle_dt_vals2(ii)=X{2}(ii,4);
         dMKgut_dt_vals2(ii)=X{2}(ii,1);
-        [Phi_Kin2, ~]=get_PhiKin(T{2}(ii), SS, params{2}, Kin2);
+        [Phi_Kin2, ~]=get_PhiKin(T{2}(ii), SS, params{2}, Kin_opts{2}, MealInfo{2});
         [dMKgut_dt2(ii),dMKmuscle_dt2(ii),~]=get_dMKgut_dt(Phi_Kin2, params{2}.kgut, X{2}(ii,1),X{2}(ii,13),X{2}(ii,14),T{2}(ii));
     end 
     

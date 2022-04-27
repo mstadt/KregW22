@@ -153,7 +153,7 @@ if do_plt
     labels{1} = 'original simulation';
     labels{2} = 'simulation 2';
     plot_simulation(T,X, params, Kin_opts, labels, tf, MealInfo)
-    % plot_dMKgut_dt(T,X,params,labels,tf) %plots dMKgut, dMKmuscle, Phi_ECtoIC and PhiICtoEC
+    plot_dMKgut_dt(T,X,params,labels,tf,Kin_opts,MealInfo) %plots dMKgut, dMKmuscle, Phi_ECtoIC and PhiICtoEC
     % the following part calculates K and MKgut at the end of the simulation, as well as delta total body K
 
 %     for ii = 1:length(T{1})
