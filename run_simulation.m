@@ -1,6 +1,9 @@
 % This file runs and then plots two simulations based on given input
 % for each of the simulations
 close all
+
+% these two are just placeholders for the get_PhiKin function. They are not
+% used if Kin_type is not 'long simulation'
 MealInfo1 = 0;
 MealInfo2 = 0;
 
