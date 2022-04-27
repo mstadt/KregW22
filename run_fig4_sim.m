@@ -37,8 +37,6 @@ end
 
 days = 20; % number of days to run the simulation for
 opts = odeset('MaxStep', 20);
-% x0 = SSdata1;
-% x_p0 = zeros(size(SSdata1));
 t0 = 0;
 tf = days*1440; %+ pars1.tchange;%1*1440 + pars1.tchange;
 tspan = t0:0.5:tf;
