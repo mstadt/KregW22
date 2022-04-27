@@ -26,7 +26,7 @@ do_ALD_sec1 = true;
 urine = true;
 
 MKX_type = 3; %0 if not doing MK cross talk, 1:dtKsec, 2:cdKsec,  3:cdKreab
-MKX_slope = 0.1; % should be -0.1 for cdKreab
+MKX_slope = -0.1; % should be -0.1 for cdKreab
 
 if MKX_type
     IG_file1 = './IGdata/KregSS_MK.mat';
