@@ -1,3 +1,4 @@
+clear all; close all; 
 %% run Meal only simulation
 pars = set_params();
 

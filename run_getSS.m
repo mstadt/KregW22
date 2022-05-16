@@ -2,10 +2,11 @@
 
 %% Begin user input
 pars = set_params();
+pars.V_muscle = 26;
 
 Kin.Kin_type = 'gut_Kin3';
 Kin.Meal = 1;
-Kin.KCL  = 0;
+Kin.KCL  = 1;
 MKX = 0; %MK crosstalk
 urine = true;
 

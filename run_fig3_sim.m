@@ -1,7 +1,7 @@
 % This file runs and then plots two simulations based on given input
 % for each of the simulations
-close all
-clear all
+close all;
+clear all;
 
 %% simulation 1
 pars1 = set_params();

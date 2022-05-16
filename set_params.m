@@ -15,8 +15,7 @@ pars.MKgutSS = (0.9*pars.Phi_Kin_ss)/pars.kgut;
 pars.V_plasma          = 4.5;%2.0;%5.0; %plasma fluid volume (L)
 pars.V_interstitial    = 10; % interstitial ECF volume (L)
 %pars.V_ecf_total       =  pars.V_plasma + pars.V_interstitial;%15.0; %15; %extracellular fluid volume L
-pars.V_icf             = 28; % intracellular fluid volume L
-pars.V_muscle          = 19.0; %  make sure baseline conc and liver make good baseline total K
+pars.V_muscle          = 24; %19.0; % intracellular fluid volume (L)
 
 %% baseline concentrations
 pars.Kec_baseline      = 4.3;%4.5; % baseline ECF K concentration (total) mEq/L

@@ -13,14 +13,14 @@ c2 = [0.3010, 0.7450, 0.9330]; %blue
 c3 = [0.4940, 0.1840, 0.5560];%purple
 
 % which plots?
-plt_PhiKin = 1;
+plt_PhiKin = 0;
 plt_con = 1;
 plt_amt = 1;
 plt_Mgut = 1;
-plt_flux = 1;
-plt_effects = 1;
-plt_kidney = 1;
-plt_ALD = 1;
+plt_flux = 0;
+plt_effects = 0;
+plt_kidney = 0;
+plt_ALD = 0;
 plt_MEAL_exp = 0;
 plt_KCL_exp = 0;
 plt_MealKCL_exp = 1;

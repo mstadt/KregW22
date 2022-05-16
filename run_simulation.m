@@ -1,6 +1,6 @@
 % This file runs and then plots two simulations based on given input
 % for each of the simulations
-close all
+clear all; close all; 
 
 % these two are just placeholders for the get_PhiKin function. They are not
 % used if Kin_type is not 'long simulation'
@@ -59,6 +59,7 @@ disp('simulation 1 finished')
 %% simulation 2
 disp('get sim 2 SS')
 pars2 = set_params();
+%pars2.V_muscle = 26;
 % pars2.Phi_dtKsec_eq= 0.035;%0.03;%0.025;  % bigger value ~ slightly bigger Urine [K], significantly smaller plasma [K]
 % pars2.Phi_cdKsec_eq= 0.006;%0.01;   % bigger value ~ slightly smaller Urine [K], significantly smaller plasma [K]
                                     % smaller ~ significantly bigger plasma
